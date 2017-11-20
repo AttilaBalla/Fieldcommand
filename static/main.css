@@ -1,0 +1,8 @@
+.navbar_left li.nav-item {
+    margin-left: 20px;
+}
+
+.banner_container {
+    background-color: gray;
+    height: 200px;
+}
