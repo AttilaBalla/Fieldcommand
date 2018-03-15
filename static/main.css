@@ -2,7 +2,30 @@
     margin-left: 20px;
 }
 
+.navbar {
+    height: 65px;
+}
+
+.navbar a {
+    font-weight: bold;
+}
+
 .banner_container {
     background-color: gray;
-    height: 200px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    height: 300px;
+}
+
+.banner_side {
+    padding: 0px 20px 0px 20px;
+    height: 270px;
+    background-color: lightgray;
+    border-radius: 8px;
+}
+
+.banner_center {
+    height: 270px;
+    background-color: lightgray;
+    border-radius: 8px;
 }
