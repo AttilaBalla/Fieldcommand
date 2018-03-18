@@ -1,0 +1,57 @@
+.modal-header {
+    border-bottom: none;
+    color: white;
+}
+
+.modal-footer {
+    border-top: none;
+    padding-bottom: 25px;
+}
+
+.modal-content {
+    background-color: #212529;
+    border-radius: 20px;
+    width: 80%;
+}
+
+.modal-body {
+    padding-left: 7%;
+}
+
+.close {
+    color: grey;
+    text-shadow: none;
+}
+
+.close:hover {
+    color: white;
+}
+
+#loginForm {
+    color: white;
+}
+
+#loginForm label {
+    display: block;
+}
+
+#loginForm input {
+    width: 90%;
+    height: 40px;
+    margin: 10px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: #424c59;
+    color: white;
+}
+
+#loginForm input:focus {
+    outline: none;
+    border: thin solid gray;
+    border-radius: 5px;
+}
+
+#loginButton {
+    margin: auto;
+    width: 50%;
+}
