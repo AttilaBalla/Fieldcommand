@@ -1,9 +1,26 @@
+body {
+    background-color: rgb(235, 235, 235);
+}
+
 .navbar_left li.nav-item {
     margin-left: 20px;
 }
 
+#navbar_bg {
+    height: 65px;
+    background-color:#343a40;
+}
+
+#banner_bg {
+    height: 300px;
+    background-color: #424c59;
+    box-shadow: 0px 0px 20px rgba(50, 50, 60, 1)
+}
+
 .navbar {
     height: 65px;
+    max-width: 1366px;
+    margin: auto;
 }
 
 .navbar a {
@@ -11,10 +28,17 @@
 }
 
 .banner_container {
-    background-color: gray;
     padding-top: 15px;
     padding-bottom: 15px;
     height: 300px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.core_container {
+    max-width: 1600px;
+    margin: auto;
+    box-shadow: 0px 15px 30px rgba(50, 50, 60, 0.75)
 }
 
 .banner_side {
@@ -28,4 +52,15 @@
     height: 270px;
     background-color: lightgray;
     border-radius: 8px;
+}
+
+#news_feed {
+    border-right: thin solid lightgrey;
+    height: 500px;
+    background: white;
+}
+
+#sidebar {
+    height: 500px;
+    background: white;
 }

@@ -1,6 +1,7 @@
 {% extends "head.html" %}
     {% block navbar %}
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div id="navbar_bg">
+      <nav class="navbar navbar-expand-sm navbar-dark">
         <a class="navbar-brand" href="#"><img src="/static/fc_icon.png" width="55" height="55" alt="logo"></a>
         
         <ul class="navbar-nav navbar_left">
@@ -14,7 +15,7 @@
             <a class="nav-link" href="#"><i class="fa fa-download"></i> Releases</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-file"></i> Battle Reports</a>
+            <a class="nav-link" href="#"><i class="fa fa-clipboard"></i> Battle Reports</a>
           </li>
           <li class="nav-item dropdown"> <!-- TODO: make this appear only if user is admin -->
             <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -32,7 +33,7 @@
                 <a class="nav-link" href="#"><i class="fa fa-power-off"></i> Login</a>
             </li>
         </ul>
-        </div>
       </nav>
+    </div>
     {% block body %}{% endblock %}
 {% endblock %}
