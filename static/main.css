@@ -132,3 +132,14 @@ body {
     color: darkgray;
     font-size: 13px;
 }
+
+footer {
+    padding: 20px 0px 20px 0px;
+    margin-top: 20px;
+    background-color: #243a51;
+}
+
+footer p {
+    margin: 10px auto 0 auto;
+    color: lightgray;
+}

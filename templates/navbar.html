@@ -1,66 +1,62 @@
-{% extends "head.html" %}
-    {% block navbar %}
-    <div id="navbar_bg">
-      <nav class="navbar navbar-expand-sm navbar-dark">
-        <a class="navbar-brand" href="#"><img src="/static/fc_icon.png" width="55" height="55" alt="logo"></a>
-        
-        <ul class="navbar-nav navbar_left">
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-home"></i> Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-info"></i> About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-download"></i> Releases</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-clipboard"></i> Battle Reports</a>
-          </li>
-          <li class="nav-item dropdown"> <!-- TODO: make this appear only if user is admin -->
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                <i class="fa fa-cog"></i> Administration
-            </a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#"><i class="fa fa-user"></i> User Management</a>
-              <a class="dropdown-item" href="#"><i class="fa fa-fire-extinguisher"></i> Battle Report Management</a>
-              <a class="dropdown-item" href="#"><i class="fa fa-upload"></i> Upload a Release</a>
-            </div>
-        </ul>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse"></div>
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <button type="button" class="btn login_button" data-toggle="modal" data-target="#loginModal">
-                    <i class="fa fa-power-off"></i> Login
-                  </button>
-                <!--<a class="nav-link" href="#"><i class="fa fa-power-off"></i> Login</a> -->
-            </li>
-        </ul>
-      </nav>
-
-      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Login</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+<div id="navbar_bg">
+  <nav class="navbar navbar-expand-sm navbar-dark">
+    <a class="navbar-brand" href="#"><img src="/static/fc_icon.png" width="55" height="55" alt="logo"></a>
+    
+    <ul class="navbar-nav navbar_left">
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fa fa-home"></i> Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fa fa-info"></i> About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fa fa-download"></i> Releases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fa fa-clipboard"></i> Battle Reports</a>
+      </li>
+      <li class="nav-item dropdown"> <!-- TODO: make this appear only if user is admin -->
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+            <i class="fa fa-cog"></i> Administration
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#"><i class="fa fa-user"></i> User Management</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-fire-extinguisher"></i> Battle Report Management</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-upload"></i> Upload a Release</a>
+        </div>
+    </ul>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse"></div>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <button type="button" class="btn login_button" data-toggle="modal" data-target="#loginModal">
+                <i class="fa fa-power-off"></i> Login
               </button>
-            </div>
-            <div class="modal-body">
-              <form id="loginForm">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username"/>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password"/>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" id="loginButton"class="btn btn-primary">Log in</button>
-            </div>
-          </div>
+            <!--<a class="nav-link" href="#"><i class="fa fa-power-off"></i> Login</a> -->
+        </li>
+    </ul>
+  </nav>
+
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"/>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password"/>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="loginButton"class="btn btn-primary">Log in</button>
         </div>
       </div>
     </div>
-    {% block body %}{% endblock %}
-{% endblock %}
+  </div>
+</div>
