@@ -32,6 +32,7 @@ def set_current_user():
 def route_index():
     return render_template('index.html')
 
+
 @app.route('/about')
 def route_about():
     return render_template('about.html')

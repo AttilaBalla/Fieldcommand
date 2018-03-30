@@ -119,10 +119,13 @@ body {
 }
 
 .text_box {
-    height: 500px;
+    display: block;
     background: rgb(240, 240, 240);
-    padding-left: 5%;
-    padding-right: 5%;
+    padding: 5%;
+}
+
+.centered {
+    text-align: center;
 }
 
 .newsfeed_post {
