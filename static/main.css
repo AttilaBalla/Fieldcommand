@@ -60,6 +60,10 @@ body {
     margin: auto;
 }
 
+.banner_text p {
+    font-size: 13px;
+}
+
 .core_container {
     max-width: 1600px;
     margin: 20px auto 0 auto;
@@ -114,7 +118,7 @@ body {
     background-repeat: no-repeat;
 }
 
-#news_feed {
+.text_box {
     height: 500px;
     background: rgb(240, 240, 240);
     padding-left: 5%;

@@ -1,13 +1,10 @@
 <div id="navbar_bg">
   <nav class="navbar navbar-expand-sm navbar-dark">
-    <a class="navbar-brand" href="#"><img src="/static/fc_icon.png" width="55" height="55" alt="logo"></a>
+    <a class="navbar-brand" href="/"><img src="/static/fc_icon.png" width="55" height="55" alt="logo"></a>
     
     <ul class="navbar-nav navbar_left">
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-home"></i> Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-info"></i> About</a>
+        <a class="nav-link" href="/about"><i class="fa fa-info"></i> About</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="fa fa-download"></i> Releases</a>
@@ -15,15 +12,9 @@
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="fa fa-clipboard"></i> Battle Reports</a>
       </li>
-      <li class="nav-item dropdown"> <!-- TODO: make this appear only if user is admin -->
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-            <i class="fa fa-cog"></i> Administration
-        </a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#"><i class="fa fa-user"></i> User Management</a>
-          <a class="dropdown-item" href="#"><i class="fa fa-fire-extinguisher"></i> Battle Report Management</a>
-          <a class="dropdown-item" href="#"><i class="fa fa-upload"></i> Upload a Release</a>
-        </div>
+      <li class="nav-item"> <!-- TODO: make this appear only if user is admin -->
+        <a class="nav-link" href="#"><i class="fa fa-cog"></i>Adminsitration</a>
+      </li>
     </ul>
     <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse"></div>
     <ul class="navbar-nav">
