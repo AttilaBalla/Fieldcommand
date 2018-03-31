@@ -83,7 +83,7 @@ body {
 
 #banner_center {
     position: relative;
-    background-image: url(banner.png);
+    background-image: url("/static/img/banner.png");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -112,13 +112,13 @@ body {
 }
 
 .reports_bg {
-    background-image: url("BB.png");
+    background-image: url("/static/img/BB.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .client_bg {
-    background-image: url("crawler.png");
+    background-image: url("/static/img/crawler.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
