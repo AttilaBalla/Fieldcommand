@@ -12,6 +12,8 @@
     border-bottom: thin solid grey;
     color: white;
     padding-left: 20px;
+    transition: background-color 0.5s;
+    transition-timing-function: ease;
 }
 
 .timeline_item p {
@@ -25,6 +27,8 @@
 
 .timeline_release {
     background: darkred;
+    transition: background-color 0.5s;
+    transition-timing-function: ease;
 }
 
 .timeline_release:hover {
@@ -34,6 +38,8 @@
 
 .timeline_blog {
     background: darkslategrey;
+    transition: background-color 0.5s;
+    transition-timing-function: ease;
 }
 
 .timeline_blog:hover {

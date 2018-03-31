@@ -37,6 +37,11 @@ def route_index():
 def route_about():
     return render_template('about.html')
 
+
+@app.route('/admin')
+def route_admin():
+    return render_template('administration.html')
+
 '''
 @app.route('/login')
 def route_login():
