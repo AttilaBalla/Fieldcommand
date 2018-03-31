@@ -42,6 +42,10 @@ def route_about():
 def route_admin():
     return render_template('administration.html')
 
+@app.route('/releases')
+def route_releases():
+    return render_template('releases.html')
+
 '''
 @app.route('/login')
 def route_login():
