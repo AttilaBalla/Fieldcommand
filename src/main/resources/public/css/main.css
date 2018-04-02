@@ -124,9 +124,15 @@ body {
     background-repeat: no-repeat;
 }
 
+.fc_bg {
+    background-image: url("/img/fc.png");
+    background-repeat: no-repeat;
+    background-position: center; 
+}
+
 .text_box {
     display: block;
-    background: rgb(240, 240, 240);
+    background: rgba(240, 240, 240, 0.9);
     padding: 5%;
 }
 
