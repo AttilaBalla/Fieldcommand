@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="head :: head"></head>
+    <body>
+        <div th:replace="navbar :: navbar"></div>
+        <div class="container-fluid core_container">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="centered font-weight-bold sidebar_title">
+                                Administration
+                            </li>
+                            <li id="admin_general" class="nav-item sidebar_button">
+                                <span class="fa fa-cogs"></span>
+                                General
+                            </li>
+                            <li id="admin_release" class="nav-item sidebar_button">
+                                <span class="fa fa-upload"></span>
+                                Releases
+                            </li>
+                            <li id="admin_gamereports" class="nav-item sidebar_button">
+                                <span class="fa fa-fire-extinguisher"></span>
+                                Game reports
+                            </li>
+                            <li id="admin_user" class="nav-item sidebar_button">
+                                <span class="fa fa-user"></span>
+                                Users
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </body>
+</html>

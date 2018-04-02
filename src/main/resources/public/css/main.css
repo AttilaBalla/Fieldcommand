@@ -19,7 +19,7 @@ body {
     height: 300px;
     margin-bottom: 20px;
     background-color:#2b435e;
-    box-shadow: 0px 0px 20px rgba(50, 50, 60, 1)
+    box-shadow: 0 0 20px rgba(50, 50, 60, 1)
 }
 
 .navbar {
@@ -72,7 +72,7 @@ body {
 .core_container {
     max-width: 1600px;
     margin: 0 auto 0 auto;
-    box-shadow: 0px 15px 30px rgba(50, 50, 60, 0.75)
+    box-shadow: 0 15px 30px rgba(50, 50, 60, 0.75)
 }
 
 .banner_side {
@@ -83,12 +83,13 @@ body {
 
 #banner_center {
     position: relative;
-    background-image: url("/static/img/banner.png");
+    background-image: url("/img/banner.png");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
     height: 270px;
 }
+
 
 .banner_text{
     color: white;
@@ -112,13 +113,13 @@ body {
 }
 
 .reports_bg {
-    background-image: url("/static/img/BB.png");
+    background-image: url("/img/BB.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .client_bg {
-    background-image: url("/static/img/crawler.png");
+    background-image: url("/img/crawler.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -160,12 +161,12 @@ body {
 
 .sidebar_button:hover{
     background-color: rgb(14, 117, 177);
-    box-shadow: 0px 0px 7px rgb(14, 117, 177);
+    box-shadow: 0 0 7px rgb(14, 117, 177);
     cursor: pointer;
 }
 
 footer {
-    padding: 20px 0px 20px 0px;
+    padding: 20px 0 20px 0;
     margin-top: 20px;
     background-color: #243a51;
 }
