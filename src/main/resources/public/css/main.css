@@ -2,59 +2,11 @@ body {
     background-color: rgb(235, 235, 235);
 }
 
-.navbar_left li.nav-item {
-    margin-left: 20px;
-}
-
-.navbar_left li.nav-item i{
-    margin: 4px;
-}
-
-#navbar_bg {
-    height: 65px;
-    background-color:#243a51;
-}
-
 #banner_bg {
     height: 300px;
     margin-bottom: 20px;
     background-color:#2b435e;
     box-shadow: 0 0 20px rgba(50, 50, 60, 1)
-}
-
-.navbar {
-    height: 65px;
-    max-width: 1366px;
-    margin: auto;
-}
-
-.navbar a {
-    font-weight: bold;
-}
-
-.login_button {
-    border: none;
-    color: white;
-    background-color: transparent;
-}
-
-.login_button:hover {
-    border: none;
-    background-color: #007bff;
-}
-
-
-.dropdown-menu {
-    background-color: #424c59;
-}
-
-.dropdown-menu a {
-    color: white;
-}
-
-.dropdown-item:hover {
-    color: white;
-    background-color:#007bff;
 }
 
 .banner_container {

@@ -1,4 +1,4 @@
-package personal.fieldcommand.Controller;
+package com.fieldcommand.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,5 +29,11 @@ public class ViewController {
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String renderAdmin() {
         return "administration";
+    }
+
+    //temporary
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String renderLogin() {
+        return "login";
     }
 }
