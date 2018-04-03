@@ -1,0 +1,46 @@
+.login_container {
+    margin: 50px auto 0 auto;
+    color: white;
+    background-color: #2b435e;
+    width: 40%;
+    max-width: 500px;
+    padding: 0 50px 50px 50px;
+    box-shadow: 0 15px 30px rgba(50, 50, 60, 0.75)
+}
+
+.login_container img {
+    display: block;
+    margin: auto;
+}
+
+.login_container h5 {
+    text-align: center;
+}
+
+.input_field {
+    position: relative;
+    margin: 30px 0 30px 0;
+}
+
+.input_field span {
+    position: absolute;
+    top: 13px;
+}
+
+.login_container input {
+    color: white;
+    background-color: unset;
+    margin: 0 0 8px 8px;
+    height: 45px;
+    border-radius: 0;
+    border: none;
+    border-bottom: thin solid lightgray;
+}
+
+.login_container input:focus {
+    color: white;
+    box-shadow: none;
+    background-color: unset;
+    border-bottom: solid rgb(14, 117, 177);
+    outline: none;
+}
