@@ -1,6 +1,8 @@
 package com.fieldcommand.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -13,10 +15,17 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "partner_gender")
-    private Role role = Role.USER;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name="users_roles",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private Set<Role> roles = new HashSet<Role>();
 
-    private String passwordHash;
+    @Column(nullable=false)
+    private String password;
+
+    @Column(unique=true, nullable=false)
     private String email;
 }
