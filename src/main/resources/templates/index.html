@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
- <head th:replace="head :: head"></head>
+ <head th:replace="/fragments/head :: head"></head>
     <link rel="stylesheet" href="/css/sidebar.css"/>
     <body>
-    <div th:replace="navbar :: navbar"></div>
+    <div th:replace="/fragments/navbar :: navbar"></div>
         <div id="banner_bg">
             <div class="container-fluid">
                 <div class="row banner_container">
@@ -121,6 +121,6 @@
             </div>
         </div>
 </body>
- <footer th:replace="footer :: footer"></footer>
+ <footer th:replace="/fragments/footer :: footer"></footer>
 </html>
 

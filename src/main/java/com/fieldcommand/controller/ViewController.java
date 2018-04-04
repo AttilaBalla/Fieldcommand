@@ -35,7 +35,7 @@ public class ViewController {
             return "administration";
         }
         else {
-            return subPage;
+            return "/fragments/subpages/" + subPage;
         }
     }
     //temporary
