@@ -1,4 +1,4 @@
-.nav-item {
+.main_navbar .nav-item {
     margin-left: 20px;
 }
 
@@ -49,4 +49,13 @@
     color: white;
     background-color: rgb(14, 117, 177);
     box-shadow: 0 0 7px rgb(14, 117, 177);
+}
+
+.highlighted {
+    background-color: rgb(17, 150, 228);
+    box-shadow: 0 0 7px rgb(25, 171, 255);
+}
+
+.side_navbar a:hover {
+    text-decoration: none;
 }

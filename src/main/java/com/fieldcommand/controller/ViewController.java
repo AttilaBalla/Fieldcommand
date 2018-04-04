@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ViewController {
@@ -27,10 +28,16 @@ public class ViewController {
     }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String renderAdmin() {
-        return "administration";
-    }
+    public String renderAdminSubPages(@RequestParam(value="subPage", required=false) String subPage) {
+        System.out.println(subPage);
 
+        if(subPage == null) {
+            return "administration";
+        }
+        else {
+            return subPage;
+        }
+    }
     //temporary
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String renderLogin() {
