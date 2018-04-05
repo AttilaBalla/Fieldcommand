@@ -2,17 +2,30 @@ window.onload = function() {
 
     $("#admin_general").addClass('highlighted');
 
-    function loadPage(pageType) {   
+    function convertToSimpleJson(formArray) {
+
+        var returnArray = {};
+        for (var i = 0; i < formArray.length; i++){
+          returnArray[formArray[i]['name']] = formArray[i]['value'];
+        }
+        return returnArray;
+      }
+
+    function loadPage(pageType) {
         let url = '/admin?subPage=' + pageType;
         $.ajax({
             type: 'GET',
-            contentType: 'text/plain', // what Im sending
+            contentType: 'text/plain',
             url: url,
             data: pageType,
             success: function(response) {
                 $('.admin_container').empty();
                 $('.admin_container').append(response);
-                },
+
+                if(pageType === "useradmin") {
+                    prepInviteForm();
+                }
+            },
             error: function(response) {
                 console.log(response);
                 //TODO
@@ -20,6 +33,28 @@ window.onload = function() {
         });
     }
 
+    function prepInviteForm() {
+        $(".userinvite_form").on("submit", function(event) {
+            event.preventDefault();
+            let data = convertToSimpleJson($(this).serializeArray());
+            console.log(data);
+
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/JSON',
+                url: "/admin/invite",
+                data: JSON.stringify(data),
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log(response);
+                    //TODO
+                }
+            });
+        });
+    }
+    
     $("#admin_general").click(function(event){
         $(".sidebar_button").removeClass('highlighted');
         $("#admin_general").addClass('highlighted');

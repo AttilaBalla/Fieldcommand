@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ViewController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ViewController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String renderIndex() {
@@ -29,7 +29,6 @@ public class ViewController {
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String renderAdminSubPages(@RequestParam(value="subPage", required=false) String subPage) {
-        System.out.println(subPage);
 
         if(subPage == null) {
             return "administration";
