@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Fieldcommand" />
+        <module name="Fieldcommand_web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Fieldcommand" target="1.8" />
+      <module name="Fieldcommand_web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
