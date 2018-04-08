@@ -14,14 +14,18 @@ public class Role {
 
     private String role;
 
+    private int power;
+
     @ManyToMany( mappedBy = "roles")
-    private Set<User> users = new HashSet<User>();
+    private Set<User> users = new HashSet<>();
 
-    public Role()
-    {}
+    Role() {
+    }
 
-    Role(String role){
+    public Role(String role, int power){
+
         this.role = role;
+        this.power = power;
     }
 
     public Long getId() {
@@ -48,9 +52,17 @@ public class Role {
         this.users = users;
     }
 
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
     @Override
     public String toString() {
-        return "Role [id=" + id + ", role=" + role + "]";
+        return "Role id: " + id + ", Role: " + role + " Role power: " + power;
     }
 
 }

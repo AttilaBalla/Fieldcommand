@@ -4,7 +4,6 @@ import com.fieldcommand.model.Role;
 import com.fieldcommand.model.User;
 import com.fieldcommand.repository.RoleRepository;
 import com.fieldcommand.repository.UserRepository;
-import org.hibernate.validator.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ public class UserService {
     private RoleRepository roleRepository;
     private EmailService emailService;
 
-    private final String NEW_USER_ROLE = "ROLE_NEW";
-
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository, EmailService emailService) {
         this.userRepository = userRepository;
@@ -37,12 +34,12 @@ public class UserService {
 
     public boolean registerUser(User user) {
 
-        Role userRole = roleRepository.findByRole(NEW_USER_ROLE);
+        Role userRole = roleRepository.findByRole("ROLE_NEW");
 
         if(userRole == null) {
-            user.addRole(NEW_USER_ROLE);
+            // TODO
         } else {
-            user.getRoles().add(userRole);
+            user.addRole(userRole);
         }
         String activationKey = generateKey();
         user.setActivationKey(activationKey);
@@ -60,13 +57,11 @@ public class UserService {
     }
 
     private String generateKey() {
-        String key = "";
         Random random = new Random();
         char[] word = new char[16];
         for (int j = 0; j < word.length; j++) {
             word[j] = (char) ('a' + random.nextInt(26));
         }
-        String toReturn = new String(word);
         return new String(word);
     }
 }

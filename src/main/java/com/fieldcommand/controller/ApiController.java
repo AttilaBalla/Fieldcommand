@@ -44,7 +44,7 @@ public class ApiController {
 
            } else {
                response.setSuccess(false);
-               response.setInformation("E-mail address already exists!");
+               response.setInformation("An account with this e-mail address already exists!");
            }
 
         } else {

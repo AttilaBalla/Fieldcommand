@@ -63,11 +63,11 @@ public class User {
         this.roles = roles;
     }
 
-    public void addRole(String role) {
+    public void addRole(Role role) {
         if (this.roles == null || this.roles.isEmpty()) {
             this.roles = new HashSet<>();
         }
-        this.roles.add(new Role(role));
+        this.roles.add(role);
     }
 
     public String getPassword() {
