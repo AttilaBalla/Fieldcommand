@@ -145,3 +145,7 @@ footer p {
 .userinvite_form div {
     margin-right: 20px;
 }
+
+.action_alert {
+    display: none;
+}
