@@ -2,8 +2,8 @@ package com.fieldcommand.model.json;
 
 public class GenericResponseJson {
 
-    public boolean success;
-    public String information;
+    private boolean success;
+    private String information;
 
     public boolean isSuccess() {
         return success;

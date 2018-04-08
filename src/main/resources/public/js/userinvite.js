@@ -17,7 +17,7 @@ function prepInviteForm() {
         let alert = $(".action_alert");
         alert.empty();
         alert.append("Sending, please wait...");
-        alert.addClass("alert-secondary");
+        alert.removeClass("alert-success alert-danger").addClass("alert-secondary");
         alert.show();
 
         let data = convertToSimpleJson($(this).serializeArray());
@@ -31,10 +31,10 @@ function prepInviteForm() {
                 alert.empty();
                 if(JSON.parse(response)["success"] === true){
                     alert.append("The e-mail has been sent successfully!");
-                    alert.addClass("alert-success");
+                    alert.removeClass("alert-secondary").addClass("alert-success");
                 } else {
                     alert.append(JSON.parse(response)["information"]);
-                    alert.addClass("alert-danger");
+                    alert.removeClass("alert-secondary").addClass("alert-danger");
                 }
                 alert.fadeTo(5000, 5000).slideUp(500, function(){
                     alert.slideUp(500);

@@ -2,6 +2,7 @@ package com.fieldcommand.service;
 
 import com.fieldcommand.model.Role;
 import com.fieldcommand.model.User;
+import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.repository.RoleRepository;
 import com.fieldcommand.repository.UserRepository;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
-
+import javax.management.relation.RoleNotFoundException;
 import java.util.Random;
 
 @Service
@@ -28,28 +29,44 @@ public class UserService {
         this.emailService = emailService;
     }
 
-    public User findUserByEmail(String email) {
+    private User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
-    public boolean registerUser(User user) {
+    public GenericResponseJson validateInvite(String email, String username, GenericResponseJson response) {
+
+        if(username.equals("") || email.equals("")) {
+            response.setSuccess(false);
+            response.setInformation("The fields cannot be empty!");
+            return response;
+        }
+
+        User user = findUserByEmail(email);
+
+        if(user != null) {
+            response.setSuccess(false);
+            response.setInformation("An account with this e-mail address already exists!");
+            return response;
+        }
+
+        response.setSuccess(true);
+        return response;
+    }
+
+    public boolean registerUser(User user) throws RoleNotFoundException, MailException {
 
         Role userRole = roleRepository.findByRole("ROLE_NEW");
 
         if(userRole == null) {
-            // TODO
+            throw new RoleNotFoundException("Role does not exist in the database!");
         } else {
             user.addRole(userRole);
         }
+
         String activationKey = generateKey();
         user.setActivationKey(activationKey);
+        emailService.sendMessage(user.getEmail(), activationKey);
 
-        try {
-            emailService.sendMessage(user.getEmail(), activationKey);
-        } catch (MailException ex) {
-            logger.error("Failed to send e-mail to {}, reason: {}", user.getEmail(), ex.getMessage());
-            return false;
-        }
         userRepository.save(user);
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());
         return true;

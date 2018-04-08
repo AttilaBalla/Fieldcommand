@@ -30,7 +30,6 @@ public class RoleService {
         roles.add(new Role("ROLE_USER", 10));
         roles.add(new Role("ROLE_DEVELOPER", 20));
         roles.add(new Role("ROLE_ADMIN", 30));
-        roles.add(new Role("ROLE_OWNER", 40));
 
         roleRepository.save(roles);
 

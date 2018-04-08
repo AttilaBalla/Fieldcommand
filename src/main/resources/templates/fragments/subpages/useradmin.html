@@ -1,16 +1,113 @@
-<div class="alert action_alert" role="alert">
-  </div>
-<h5>User account creation<br/>
-    <small>Adding new users is invite-based. This form will send an e-mail with further instructions.</small>
-</h5>
-<form class="userinvite_form">
-    <div class="input_field">
-        <label for="username" class="sr-only">Username</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="true" /> 
+<section class="useradmin_invite">
+    <div class="alert action_alert" role="alert">
     </div>
-    <div class="input_field">
-        <label for="email" class="sr-only">E-mail adress</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="E-mail address" required="true" />
+    <h5>User account creation<br/>
+        <small>Adding new users is invite-based. This form will send an e-mail with further instructions.</small>
+    </h5>
+    <form class="userinvite_form">
+        <div>
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="true" /> 
+        </div>
+        <div>
+            <label for="email" class="sr-only">E-mail adress</label>
+            <input type="text" id="email" name="email" class="form-control" placeholder="E-mail address" required="true" />
+        </div>
+        <button class="btn btn-success invite_send_button" type="submit">Send invitation</button>
+    </form>
+</section>
+<section class="useradmin_userlist">
+    <div id="user_cards">
+        <div class="card border-danger">
+            <div class="card-header" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                <h6 class="mb-0">
+                    <span class="badge badge-danger">Admin</span>
+                    Admin
+                </h6>
+            </div>
+            <div id="collapse2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <form class="useredit_form">
+                        <div>
+                            <label for="username" class="sr-only">Username</label>
+                            <input type="text" id="username" name="username" class="form-control" value="username"/> 
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">E-mail adress</label>
+                            <input type="text" id="email" name="email" class="form-control" value="E-mail address"/>
+                        </div>
+                        <button class="btn btn-warning invite_send_button" type="submit">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card border-warning">
+            <div class="card-header" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                <h6 class="mb-0">
+                    <span class="badge badge-warning">Developer</span>
+                    developer
+                    <span class="float-right admin_actions">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </span>
+                </h6>
+            </div>
+            <div id="collapse3" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+            <div class="card-header" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
+                <h6 class="mb-0">
+                    <span class="badge badge-primary">User</span>
+                    user
+                    <span class="float-right admin_actions">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </span>
+                </h6>
+            </div>
+            <div id="collapse4" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-info">
+            <div class="card-header" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
+                <h6 class="mb-0">
+                    <span class="badge badge-info">New</span>
+                    new
+                    <span class="float-right admin_actions">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </span>
+                </h6>
+            </div>
+            <div id="collapse5" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
+        <div class="card border-dark">
+            <div class="card-header" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
+                <h6 class="mb-0">
+                    <span class="badge badge-dark">Disabled</span>
+                    disabled
+                    <span class="float-right admin_actions">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </span>
+                </h6>
+            </div>
+            <div id="collapse6" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+            </div>
+        </div>
     </div>
-    <button class="btn btn-success invite_send_button" type="submit">Send invitation</button>
-</form>
+</section>

@@ -1,0 +1,41 @@
+.admin_container {
+    padding: 35px;
+}
+
+.userinvite_form, .useredit_form {
+    display: flex;
+}
+
+.userinvite_form div, .useredit_form div {
+    margin-right: 20px;
+}
+
+.action_alert {
+    display: none;
+}
+
+#user_cards .card {
+    margin: 3px 0 3px 0;
+    border-radius: 0;
+}
+
+.useradmin_invite {
+    min-height: 180px;
+}
+
+.admin_actions {
+    color: gray;
+}
+
+.admin_actions i {
+    margin-left: 5px;
+}
+
+.badge {
+    min-width: 70px;
+    margin-right: 20px;
+}
+
+.card:hover {
+    cursor: pointer;
+}

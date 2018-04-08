@@ -133,19 +133,3 @@ footer p {
     margin: 10px auto 0 auto;
     color: lightgray;
 }
-
-.admin_container {
-    padding: 35px;
-}
-
-.userinvite_form {
-    display: flex;
-}
-
-.userinvite_form div {
-    margin-right: 20px;
-}
-
-.action_alert {
-    display: none;
-}

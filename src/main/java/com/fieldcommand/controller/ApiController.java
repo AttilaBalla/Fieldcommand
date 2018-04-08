@@ -5,12 +5,19 @@ import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.model.json.InviteJson;
 import com.fieldcommand.service.UserService;
 import com.fieldcommand.util.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.management.relation.RoleNotFoundException;
 
 
 @RestController
 public class ApiController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private UserService userService;
 
@@ -22,36 +29,41 @@ public class ApiController {
     @PostMapping(value = "/admin/invite")
     public String inviteUser(@RequestBody InviteJson invite) {
 
+        String internalError = "An internal error occurred. Try again later!";
+
         GenericResponseJson response = new GenericResponseJson();
 
         String email = invite.getEmail();
         String username = invite.getUsername();
 
-        if(!username.equals("") || !email.equals("")) {
-
-           User user = userService.findUserByEmail(email);
-
-           if(user == null) {
-
-               boolean registerSuccess = userService.registerUser(new User(email, username));
-
-               if (registerSuccess) {
-                   response.setSuccess(true);
-               } else {
-                   response.setSuccess(false);
-                   response.setInformation("An internal error occured. Try again later!");
-               }
-
-           } else {
-               response.setSuccess(false);
-               response.setInformation("An account with this e-mail address already exists!");
-           }
-
-        } else {
-            response.setSuccess(false);
-            response.setInformation("The fields cannot be empty!");
-
+        response = userService.validateInvite(email, username, response);
+        if(!response.isSuccess()) {
+            return JsonUtil.toJson(response);
         }
+
+       boolean registerSuccess = false;
+       try {
+
+           registerSuccess = userService.registerUser(new User(email, username));
+
+       } catch (RoleNotFoundException ex) {
+           logger.error("Failed to set role for {}, reason: {}", username, ex.getMessage());
+           response.setSuccess(false);
+           response.setInformation(internalError);
+
+       } catch (MailException ex) {
+           logger.error("Failed to send e-mail to {}, reason: {}", email, ex.getMessage());
+           response.setSuccess(false);
+           response.setInformation(internalError);
+       }
+
+       if (registerSuccess) {
+           response.setSuccess(true);
+
+       } else {
+           response.setSuccess(false);
+           response.setInformation(internalError);
+       }
 
         return JsonUtil.toJson(response);
     }
