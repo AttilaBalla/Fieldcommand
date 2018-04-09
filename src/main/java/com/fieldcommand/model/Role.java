@@ -12,7 +12,8 @@ public class Role {
     @GeneratedValue
     private Long id;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 
     private int power;
 
@@ -22,7 +23,7 @@ public class Role {
     Role() {
     }
 
-    public Role(String role, int power){
+    public Role( RoleType role, int power){
 
         this.role = role;
         this.power = power;
@@ -36,11 +37,11 @@ public class Role {
         this.id = id;
     }
 
-    public String getRole() {
+    public RoleType getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleType role) {
         this.role = role;
     }
 
@@ -64,5 +65,5 @@ public class Role {
     public String toString() {
         return "Role id: " + id + ", Role: " + role + " Role power: " + power;
     }
-
 }
+
