@@ -4,7 +4,7 @@
     <h5>User account creation<br/>
         <small>Adding new users is invite-based. This form will send an e-mail with further instructions.</small>
     </h5>
-    <form class="userinvite_form">
+    <form class="form_block userinvite_form">
         <div>
             <label for="username" class="sr-only">Username</label>
             <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="true" /> 
@@ -13,36 +13,48 @@
             <label for="email" class="sr-only">E-mail adress</label>
             <input type="text" id="email" name="email" class="form-control" placeholder="E-mail address" required="true" />
         </div>
-        <button class="btn btn-success invite_send_button" type="submit">Send invitation</button>
+        <button class="btn btn-primary invite_send_button" type="submit">Send invitation</button>
     </form>
 </section>
 <section class="useradmin_userlist">
-    <div id="user_cards">
+    <div id="accordion" class="user_cards">
         <div class="card border-danger">
-            <div class="card-header" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+            <div class="card-header collapsed" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
                 <h6 class="mb-0">
-                    <span class="badge badge-danger">Admin</span>
                     Admin
                 </h6>
             </div>
             <div id="collapse2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                 <div class="card-body">
-                    <form class="useredit_form">
-                        <div>
-                            <label for="username" class="sr-only">Username</label>
-                            <input type="text" id="username" name="username" class="form-control" value="username"/> 
+                    <form>
+                        <div class="float-left user_details">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" class="form-control user_username" value="username"/> 
+                        
+                            <label for="email" class="mt-3">E-mail address</label>
+                            <input type="text" name="email" class="form-control user_email" value="E-mail address"/>
                         </div>
-                        <div>
-                            <label for="email" class="sr-only">E-mail adress</label>
-                            <input type="text" id="email" name="email" class="form-control" value="E-mail address"/>
+                        <div class="float-right mt-2 user_roles">
+                            <h6> Roles </h6>
+                            <input type="checkbox" name="roles" value="Admin"/><span class="badge badge-danger ml-2">Admin</span>
+                            <input type="checkbox" name="roles" value="Developer"/><span class="badge badge-warning ml-2">Developer</span>
+                            <input type="checkbox" name="roles" value="User"/><span class="badge badge-primary ml-2">User</span>
+                            <input type="checkbox" name="roles" value="Disabled"/><span class="badge badge-dark ml-2">Disabled</span>
                         </div>
-                        <button class="btn btn-warning invite_send_button" type="submit">Save changes</button>
+                        <div class="float-right mt-2 user_versions">
+                            <h6> Versions </h6>
+                            <input type="checkbox" name="versions" value="Official"/><span class="badge badge_version ml-2">Official</span>
+                            <input type="checkbox" name="versions" value="BP 1.5"/><span class="badge badge_version ml-2">BP 1.5</span>
+                        </div>
+                        <div class="float-right w-100">
+                        <button class="btn btn-warning user_update_button float-right mb-3" type="submit">Save changes</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
         <div class="card border-warning">
-            <div class="card-header" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+            <div class="card-header collapsed" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
                 <h6 class="mb-0">
                     <span class="badge badge-warning">Developer</span>
                     developer
@@ -59,7 +71,7 @@
             </div>
         </div>
         <div class="card border-primary">
-            <div class="card-header" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
+            <div class="card-header collapsed" data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapse4">
                 <h6 class="mb-0">
                     <span class="badge badge-primary">User</span>
                     user
@@ -76,7 +88,7 @@
             </div>
         </div>
         <div class="card border-info">
-            <div class="card-header" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
+            <div class="card-header collapsed" data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
                 <h6 class="mb-0">
                     <span class="badge badge-info">New</span>
                     new
@@ -93,7 +105,7 @@
             </div>
         </div>
         <div class="card border-dark">
-            <div class="card-header" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
+            <div class="card-header collapsed" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
                 <h6 class="mb-0">
                     <span class="badge badge-dark">Disabled</span>
                     disabled

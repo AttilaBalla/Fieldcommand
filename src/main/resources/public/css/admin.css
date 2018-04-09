@@ -2,11 +2,11 @@
     padding: 35px;
 }
 
-.userinvite_form, .useredit_form {
+.form_block {
     display: flex;
 }
 
-.userinvite_form div, .useredit_form div {
+.form_block div {
     margin-right: 20px;
 }
 
@@ -14,7 +14,7 @@
     display: none;
 }
 
-#user_cards .card {
+.user_cards .card {
     margin: 3px 0 3px 0;
     border-radius: 0;
 }
@@ -36,6 +36,19 @@
     margin-right: 20px;
 }
 
-.card:hover {
+.collapsed:hover {
     cursor: pointer;
+}
+
+.badge_version {
+    color: #fff;
+    background-color: #6e00b8;
+}
+
+.user_details {
+    width: 35%;
+}
+
+.user_roles, .user_versions {
+    width: 55%;
 }

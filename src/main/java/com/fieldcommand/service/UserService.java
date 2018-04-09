@@ -1,6 +1,7 @@
 package com.fieldcommand.service;
 
 import com.fieldcommand.model.Role;
+import com.fieldcommand.model.RoleType;
 import com.fieldcommand.model.User;
 import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.repository.RoleRepository;
@@ -55,7 +56,7 @@ public class UserService {
 
     public boolean registerUser(User user) throws RoleNotFoundException, MailException {
 
-        Role userRole = roleRepository.findByRole("ROLE_NEW");
+        Role userRole = roleRepository.findByRole(RoleType.ROLE_NEW);
 
         if(userRole == null) {
             throw new RoleNotFoundException("Role does not exist in the database!");

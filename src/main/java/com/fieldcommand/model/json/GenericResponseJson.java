@@ -1,6 +1,6 @@
 package com.fieldcommand.model.json;
 
-public class GenericResponseJson {
+public class GenericResponseJson { // others should extend this class
 
     private boolean success;
     private String information;
@@ -13,6 +13,7 @@ public class GenericResponseJson {
         this.success = success;
     }
 
+    // getErrorInformation
     public String getInformation() {
         return information;
     }
