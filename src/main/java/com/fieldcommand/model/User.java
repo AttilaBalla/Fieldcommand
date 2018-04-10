@@ -1,6 +1,7 @@
 package com.fieldcommand.model;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -37,6 +38,13 @@ public class User {
     public User(String email, String username) {
         this.email = email;
         this.username = username;
+    }
+
+    public User(String email, String username, Role role, String activationKey) {
+        this.email = email;
+        this.username = username;
+        this.addRole(role);
+        this.activationKey = activationKey;
     }
 
     public long getId() {

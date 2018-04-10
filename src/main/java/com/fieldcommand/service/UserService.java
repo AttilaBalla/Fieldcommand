@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
-import java.util.Random;
+import static com.fieldcommand.util.KeyGenerator.*;
 
 @Service
 public class UserService {
@@ -29,6 +29,8 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.emailService = emailService;
     }
+
+
 
     private User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
@@ -72,14 +74,5 @@ public class UserService {
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());
         return true;
 
-    }
-
-    private String generateKey() {
-        Random random = new Random();
-        char[] word = new char[16];
-        for (int j = 0; j < word.length; j++) {
-            word[j] = (char) ('a' + random.nextInt(26));
-        }
-        return new String(word);
     }
 }
