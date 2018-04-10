@@ -3,6 +3,7 @@ package com.fieldcommand.model;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "username")
     private String username;
@@ -30,6 +31,9 @@ public class User {
     @Column(unique=true, nullable=false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType displayedRole;
+
     private String activationKey;
 
     public User()
@@ -47,11 +51,33 @@ public class User {
         this.activationKey = activationKey;
     }
 
-    public long getId() {
+    private void findDisplayedRole() {
+        int highest = 0;
+        for (Role role: roles
+             ) {
+                int power = role.getPower();
+            if (power > highest) {
+                highest = power;
+                this.displayedRole = role.getRole();
+            }
+        }
+    }
+
+    public HashMap<String, String> convertToMap() {
+        HashMap<String, String> user = new HashMap<>();
+        user.put("id", id.toString());
+        user.put("username", username);
+        user.put("email", email);
+        user.put("role", displayedRole.toString());
+
+        return user;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,6 +95,7 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+        this.findDisplayedRole();
     }
 
     public void addRole(Role role) {
@@ -76,6 +103,7 @@ public class User {
             this.roles = new HashSet<>();
         }
         this.roles.add(role);
+        this.findDisplayedRole();
     }
 
     public String getPassword() {
@@ -100,5 +128,23 @@ public class User {
 
     public void setActivationKey(String key) {
         this.activationKey = key;
+    }
+
+    public RoleType getDisplayedRole() {
+        return displayedRole;
+    }
+
+    public void setDisplayedRole(RoleType displayedRole) {
+        this.displayedRole = displayedRole;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", roles=" + roles +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

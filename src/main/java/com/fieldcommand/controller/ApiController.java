@@ -68,4 +68,8 @@ public class ApiController {
         return JsonUtil.toJson(response);
     }
 
+    @GetMapping(value = "/admin/users")
+    public String listUsers() {
+        return JsonUtil.toJson(userService.findAll());
+    }
 }

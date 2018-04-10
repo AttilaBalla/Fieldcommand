@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import static com.fieldcommand.util.KeyGenerator.*;
 
 @Service
@@ -24,7 +27,8 @@ public class UserService {
     private EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, EmailService emailService) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
@@ -36,11 +40,24 @@ public class UserService {
         return userRepository.findUserByEmail(email);
     }
 
+    public List<HashMap<String, String>> findAll() {
+        List<User> users = userRepository.findAll();
+        System.out.println(users);
+        List<HashMap<String, String>> usersMap = new ArrayList<>();
+
+        for (User user: users) {
+            usersMap.add(user.convertToMap());
+        }
+
+        return usersMap;
+    }
+
     public GenericResponseJson validateInvite(String email, String username, GenericResponseJson response) {
 
         if(username.equals("") || email.equals("")) {
             response.setSuccess(false);
             response.setInformation("The fields cannot be empty!");
+
             return response;
         }
 
@@ -53,6 +70,7 @@ public class UserService {
         }
 
         response.setSuccess(true);
+
         return response;
     }
 
@@ -72,7 +90,7 @@ public class UserService {
 
         userRepository.save(user);
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());
-        return true;
 
+        return true;
     }
 }

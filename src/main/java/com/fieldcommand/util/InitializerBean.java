@@ -46,8 +46,6 @@ public class InitializerBean {
 
         Role newUser = roleRepository.findByRole(RoleType.ROLE_NEW);
         Role user = roleRepository.findByRole(RoleType.ROLE_USER);
-        System.out.println(newUser);
-        System.out.println(user);
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user2", newUser, generateKey()));

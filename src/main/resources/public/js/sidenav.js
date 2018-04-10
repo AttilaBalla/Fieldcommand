@@ -8,7 +8,6 @@ window.onload = function() {
             type: 'GET',
             contentType: 'text/plain',
             url: url,
-            data: pageType,
             success: function(response) {
                 $('.admin_container').empty();
                 $('.admin_container').append(response);
@@ -46,5 +45,6 @@ window.onload = function() {
         $(".sidebar_button").removeClass('highlighted');
         $("#admin_user").addClass('highlighted');
         loadPage('useradmin');
+        loadUsers();
     });
 };
