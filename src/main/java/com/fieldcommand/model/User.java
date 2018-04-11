@@ -64,13 +64,13 @@ public class User {
     }
 
     public HashMap<String, String> convertToMap() {
-        HashMap<String, String> user = new HashMap<>();
-        user.put("id", id.toString());
-        user.put("username", username);
-        user.put("email", email);
-        user.put("role", displayedRole.toString());
+        HashMap<String, String> userData = new HashMap<>();
+        userData.put("id", id.toString());
+        userData.put("username", username);
+        userData.put("email", email);
+        userData.put("role", displayedRole.toString());
 
-        return user;
+        return userData;
     }
 
     public Long getId() {

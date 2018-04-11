@@ -36,6 +36,9 @@ function prepInviteForm() {
                     alert.append(JSON.parse(response)["information"]);
                     alert.removeClass("alert-secondary").addClass("alert-danger");
                 }
+
+                setTimeout(loadUsers(), 1000);
+
                 alert.fadeTo(5000, 5000).slideUp(500, function(){
                     alert.slideUp(500);
                      });

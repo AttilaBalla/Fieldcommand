@@ -42,7 +42,6 @@ public class UserService {
 
     public List<HashMap<String, String>> findAll() {
         List<User> users = userRepository.findAll();
-        System.out.println(users);
         List<HashMap<String, String>> usersMap = new ArrayList<>();
 
         for (User user: users) {
