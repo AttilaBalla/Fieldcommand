@@ -48,8 +48,8 @@ public class InitializerBean {
         Role user = roleRepository.findByRole(RoleType.ROLE_USER);
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
-        users.add(new User("user@email3.com", "user2", newUser, generateKey()));
-        users.add(new User("user@email4.com", "user2", user, generateKey()));
+        users.add(new User("user@email3.com", "user3", newUser, generateKey()));
+        users.add(new User("user@email4.com", "user4", user, generateKey()));
 
         userRepository.save(users);
     }
