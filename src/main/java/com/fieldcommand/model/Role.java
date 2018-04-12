@@ -1,6 +1,7 @@
 package com.fieldcommand.model;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,8 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    private int power;
+    @Column(name = "power")
+    private Integer power;
 
     @ManyToMany( mappedBy = "roles")
     private Set<User> users = new HashSet<>();
@@ -33,12 +35,25 @@ public class Role {
         return id;
     }
 
+    public HashMap<String, String> convertToMap() {
+        HashMap<String, String> roleData = new HashMap<>();
+        roleData.put("roleType", role.toString());
+        roleData.put("power", power.toString());
+
+        return roleData;
+
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public RoleType getRole() {
         return role;
+    }
+
+    public String getRoleString() {
+        return role.toString();
     }
 
     public void setRole(RoleType role) {
@@ -53,11 +68,11 @@ public class Role {
         this.users = users;
     }
 
-    public int getPower() {
+    public Integer getPower() {
         return power;
     }
 
-    public void setPower(int power) {
+    public void setPower(Integer power) {
         this.power = power;
     }
 

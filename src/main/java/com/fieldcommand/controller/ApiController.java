@@ -3,6 +3,7 @@ package com.fieldcommand.controller;
 import com.fieldcommand.model.User;
 import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.model.json.InviteJson;
+import com.fieldcommand.service.RoleService;
 import com.fieldcommand.service.UserService;
 import com.fieldcommand.util.JsonUtil;
 import org.slf4j.Logger;
@@ -20,10 +21,12 @@ public class ApiController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserService(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostMapping(value = "/admin/invite")
@@ -69,7 +72,19 @@ public class ApiController {
     }
 
     @GetMapping(value = "/admin/users")
-    public String listUsers() {
+    public String getUsers() {
         return JsonUtil.toJson(userService.findAll());
     }
+
+    @GetMapping(value = "/admin/roles")
+    public String getRoles() {
+        return JsonUtil.toJson(roleService.findAll());
+    }
+
+    @GetMapping(value = "/admin/userRoles")
+    public String getUserRoles() {
+        return JsonUtil.toJson(userService.findAllRolesOfAllUsers());
+    }
+
+
 }

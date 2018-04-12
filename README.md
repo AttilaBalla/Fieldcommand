@@ -1,6 +1,6 @@
 ## Fieldcommand ##
 
-Fieldcommand is a development manager website with the focus of providing the newest versions and updates to our small but loyal ROTR community.
+Fieldcommand is a development manager & mod portal site with the focus of providing the newest versions and updates to our small but loyal ROTR community.
 
 It will be paired with a desktop client that automates the process of downloading, installing and switching between different versions. 
 

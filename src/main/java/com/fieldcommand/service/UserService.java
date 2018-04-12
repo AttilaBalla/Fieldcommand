@@ -15,7 +15,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import static com.fieldcommand.util.KeyGenerator.*;
 
@@ -36,21 +36,31 @@ public class UserService {
         this.emailService = emailService;
     }
 
-
-
     private User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
     public List<HashMap<String, String>> findAll() {
         List<User> users = userRepository.findAll();
-        List<HashMap<String, String>> usersMap = new ArrayList<>();
+        List<HashMap<String, String>> userData = new ArrayList<>();
 
         for (User user: users) {
-            usersMap.add(user.convertToMap());
+            userData.add(user.getSimpleUserDetails());
         }
 
-        return usersMap;
+        return userData;
+    }
+
+    public HashMap<String, Set<String>> findAllRolesOfAllUsers() {
+        List<User> userList = userRepository.findAll();
+        HashMap<String, Set<String>> roles = new HashMap<>();
+
+        for (User user: userList
+             ) {
+            roles.put(user.getId().toString(), user.getRolesInStringFormat());
+        }
+
+        return roles;
     }
 
     public GenericResponseJson validateInvite(String email, String username, GenericResponseJson response) {

@@ -23,7 +23,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private Set<Role> roles = new HashSet<Role>();
+    private Set<Role> roles = new HashSet<>();
 
     @Column
     private String password;
@@ -63,7 +63,7 @@ public class User {
         }
     }
 
-    public HashMap<String, String> convertToMap() {
+    public HashMap<String, String> getSimpleUserDetails() {
         HashMap<String, String> userData = new HashMap<>();
         userData.put("id", id.toString());
         userData.put("username", username);
@@ -72,6 +72,8 @@ public class User {
 
         return userData;
     }
+
+
 
     public Long getId() {
         return id;
@@ -91,6 +93,12 @@ public class User {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public Set<String> getRolesInStringFormat() {
+        Set<String> stringRoles = new HashSet<>();
+        this.roles.forEach( (role) -> stringRoles.add(role.getRoleString()));
+        return stringRoles;
     }
 
     public void setRoles(Set<Role> roles) {

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import static com.fieldcommand.util.KeyGenerator.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class InitializerBean {
@@ -49,8 +51,17 @@ public class InitializerBean {
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
-        users.add(new User("user@email4.com", "user4", user, generateKey()));
 
+        User admin = new User("user@email4.com", "user4");
+        Set<Role> adminRoles = new HashSet<>();
+
+        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_ADMIN));
+        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_DEVELOPER));
+        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_USER));
+
+        admin.setRoles(adminRoles);
+
+        userRepository.save(admin);
         userRepository.save(users);
     }
 }

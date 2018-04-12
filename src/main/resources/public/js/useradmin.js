@@ -3,13 +3,12 @@ function loadUsers() {
     let url = '/admin/users';
     $.ajax({
         type: 'GET',
-        contentType: 'text/plain',
         url: url,
         success: function(response) {
-           jQuery.each(JSON.parse(response), function(i, user) {
+            jQuery.each(JSON.parse(response), function(i, user) {
             populateUserTable(i, user);
           });
-
+          loadRoles();
         },
         error: function(response) {
             console.log(response);
@@ -19,15 +18,14 @@ function loadUsers() {
 }
 
 function loadRoles() {
-    console.log("I work");
-    let url = '/admin/roles';
+    let url = '/admin/userRoles';
     $.ajax({
         type: 'GET',
-        contentType: 'text/plain',
         url: url,
         success: function(response) {
-           console.log(response);
-
+            jQuery.each(JSON.parse(response), function(id, roleSet) {
+            setUserRoles(id, roleSet);
+            });
         },
         error: function(response) {
             console.log(response);
@@ -37,8 +35,8 @@ function loadRoles() {
 }
 
 function populateUserTable(i, user) {
-    console.log(user);
-    var roleBorders = {"ROLE_ADMIN": "border-danger", "ROLE_DEVELOPER": "border-warning", "ROLE_USER": "border-primary", "ROLE_NEW": "border-info", "ROLE_DISABLED": "border-dark",}
+    
+    var nameColors = {"ROLE_ADMIN": "text-danger", "ROLE_DEVELOPER": "text-warning", "ROLE_USER": "text-primary", "ROLE_NEW": "text-info", "ROLE_DISABLED": "text-dark"}
 
     var $cardBody = $("<div/>")
     .addClass("card-body")
@@ -59,11 +57,11 @@ function populateUserTable(i, user) {
                     "aria-expanded": "true",
                     "aria-controls": "collapse" + i
                   })
-                .html("<h6 class=\"mb-0\">"+ user["username"] + "</h6>");
+                .html("<h6 class=\"mb-0 " + nameColors[user["role"]] + "\">" + user["username"] + "</h6>");
 
-    var $card = $("<div/>")   
-                 .addClass("card " + roleBorders[user["role"]])
-                 .html($cardHeader);
+    var $card = $("<div/>")
+                .addClass("card")
+                .html($cardHeader);
     
     $card.append($collapseBody);
 
@@ -83,16 +81,22 @@ function buildForm(user) {
 
     $roles = $("<div/>")
                     .addClass("float-right mt-2 user_roles")
+                    .attr({
+                        "data-userId": user["id"]
+                      })
                     .html(`
                     <h6>Roles</h6>
-                    <input type="checkbox" name="roles" value="Admin"/><span class="badge badge-danger ml-2">Admin</span>
-                    <input type="checkbox" name="roles" value="Developer"/><span class="badge badge-warning ml-2">Developer</span>
-                    <input type="checkbox" name="roles" value="User"/><span class="badge badge-primary ml-2">User</span>
-                    <input type="checkbox" name="roles" value="Disabled"/><span class="badge badge-dark ml-2">Disabled</span>
+                    <input type="checkbox" name="roles" value="ROLE_ADMIN"/><span class="badge badge-danger ml-2">Admin</span>
+                    <input type="checkbox" name="roles" value="ROLE_DEVELOPER"/><span class="badge badge-warning ml-2">Developer</span>
+                    <input type="checkbox" name="roles" value="ROLE_USER"/><span class="badge badge-primary ml-2">User</span>
+                    <input type="checkbox" name="roles" value="ROLE_DISABLED"/><span class="badge badge-dark ml-2">Disabled</span>
                 `);
 
     $userDetails = $("<div/>")
                     .addClass("float-left user_details")
+                    .attr({
+                        "data-userId": user["id"]
+                      })
                     .html(`
                     <label for="username">Username</label>
                     <input type="text" name="username" class="form-control user_username" value="` + user["username"] + `"/> 
@@ -109,4 +113,21 @@ function buildForm(user) {
 
     $form = $("<form/>").append($userDetails, $roles, $versions, $bottom);
     return $form;
+}
+
+function setUserRoles(userId, roleSet) {
+
+    $roles = $(".user_roles")
+                .filter(function(){
+                    return this.dataset.userid == userId;
+                });
+
+    $roles.children('input').each(function() {
+            $input = $(this);
+            if(roleSet.includes($input.val())) {
+                $input.attr({
+                "checked":"checked"
+                });
+            }
+    });
 }
