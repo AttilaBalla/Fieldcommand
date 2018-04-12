@@ -14,6 +14,7 @@ public class ViewController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String renderIndex() {
+
         return "index";
     }
 

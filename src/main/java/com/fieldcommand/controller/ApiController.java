@@ -3,12 +3,16 @@ package com.fieldcommand.controller;
 import com.fieldcommand.model.User;
 import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.model.json.InviteJson;
+import com.fieldcommand.service.ApiService;
 import com.fieldcommand.service.RoleService;
 import com.fieldcommand.service.UserService;
 import com.fieldcommand.util.JsonUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +24,18 @@ public class ApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${swrnet.rotr-internal.url}")
+    private String url;
+
     private UserService userService;
     private RoleService roleService;
+    private ApiService apiService;
 
     @Autowired
-    public void setUserService(UserService userService, RoleService roleService) {
+    public void setUserService(UserService userService, RoleService roleService, ApiService apiService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.apiService = apiService;
     }
 
     @PostMapping(value = "/admin/invite")
@@ -84,6 +93,19 @@ public class ApiController {
     @GetMapping(value = "/admin/userRoles")
     public String getUserRoles() {
         return JsonUtil.toJson(userService.findAllRolesOfAllUsers());
+    }
+
+    @GetMapping(value = "/swrstatus")
+    public String getSwrStatus() {
+
+
+        JSONObject status = new JSONObject();
+        try {
+            status = apiService.getJson(url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return JsonUtil.toJson(status);
     }
 
 

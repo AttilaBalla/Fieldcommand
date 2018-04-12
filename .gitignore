@@ -67,5 +67,6 @@ modules.xml
 target
 
 application-dev.properties
+src/main/resources/META-INF/
 
 # End of https://www.gitignore.io/api/intellij+iml

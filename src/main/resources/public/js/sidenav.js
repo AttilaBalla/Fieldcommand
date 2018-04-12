@@ -6,7 +6,6 @@ window.onload = function() {
         let url = '/admin?subPage=' + pageType;
         $.ajax({
             type: 'GET',
-            contentType: 'text/plain',
             url: url,
             success: function(response) {
                 $('.admin_container').empty();
