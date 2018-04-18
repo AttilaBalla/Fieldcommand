@@ -5,6 +5,7 @@ import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.model.json.InviteJson;
 import com.fieldcommand.service.ApiService;
 import com.fieldcommand.service.RoleService;
+import com.fieldcommand.service.SwrNetService;
 import com.fieldcommand.service.UserService;
 import com.fieldcommand.util.JsonUtil;
 import org.json.JSONException;
@@ -24,18 +25,15 @@ public class ApiController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${swrnet.rotr-internal.url}")
-    private String url;
-
     private UserService userService;
     private RoleService roleService;
-    private ApiService apiService;
+    private SwrNetService swrNetService;
 
     @Autowired
-    public void setUserService(UserService userService, RoleService roleService, ApiService apiService) {
+    public void setUserService(UserService userService, RoleService roleService, SwrNetService swrNetService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.apiService = apiService;
+        this.swrNetService = swrNetService;
     }
 
     @PostMapping(value = "/admin/invite")
@@ -97,15 +95,7 @@ public class ApiController {
 
     @GetMapping(value = "/swrstatus")
     public String getSwrStatus() {
-
-
-        JSONObject status = new JSONObject();
-        try {
-            status = apiService.getJson(url);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return JsonUtil.toJson(status);
+        return JsonUtil.toJson(swrNetService.getStatus());
     }
 
 

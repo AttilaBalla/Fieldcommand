@@ -5,6 +5,14 @@ public class GenericResponseJson { // others should extend this class
     private boolean success;
     private String information;
 
+    public GenericResponseJson() {
+
+    }
+
+    public GenericResponseJson(boolean success) {
+        this.success = success;
+    }
+
     public boolean isSuccess() {
         return success;
     }
@@ -13,7 +21,6 @@ public class GenericResponseJson { // others should extend this class
         this.success = success;
     }
 
-    // getErrorInformation
     public String getInformation() {
         return information;
     }

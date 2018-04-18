@@ -10,6 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
 import java.util.ArrayList;
@@ -29,14 +35,15 @@ public class UserService {
     private EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository,
+    public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
                        EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
     }
 
-    private User findUserByEmail(String email) {
+        private User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
