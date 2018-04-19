@@ -15,6 +15,8 @@
     </parent>
 
     <properties>
+        <org.springframework.security.version>3.2.3.RELEASE</org.springframework.security.version>
+        <org.springframework.version>4.0.4.RELEASE</org.springframework.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <version.hibernate.validator>5.1.2.Final</version.hibernate.validator>
@@ -42,15 +44,9 @@
 
         <!-- Spring security support -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>5.0.3.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>5.0.3.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>2.0.1.RELEASE</version>
         </dependency>
 
         <!-- Spring boot test framework -->

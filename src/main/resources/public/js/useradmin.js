@@ -111,7 +111,7 @@ function buildForm(user) {
                 .html("<button class=\"btn btn-warning user_update_button float-right mb-3\" type=\"submit\">Save changes</button>"
                 );
 
-    $form = $("<form/>").append($userDetails, $roles, $versions, $bottom);
+    $form = $("<form/>").addClass("user_edit").append($userDetails, $roles, $versions, $bottom);
     return $form;
 }
 
