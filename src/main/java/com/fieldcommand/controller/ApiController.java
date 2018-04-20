@@ -3,17 +3,15 @@ package com.fieldcommand.controller;
 import com.fieldcommand.model.User;
 import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.model.json.InviteJson;
-import com.fieldcommand.service.ApiService;
+import com.fieldcommand.model.json.KeyPasswordJson;
 import com.fieldcommand.service.RoleService;
 import com.fieldcommand.service.SwrNetService;
 import com.fieldcommand.service.UserService;
-import com.fieldcommand.util.JsonUtil;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.fieldcommand.utility.JsonUtil;
+import com.fieldcommand.utility.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,6 +74,32 @@ public class ApiController {
        }
 
         return JsonUtil.toJson(response);
+    }
+
+    @PostMapping(value = "/activate")
+    public String activateAccount(@RequestBody KeyPasswordJson keyPasswordJson) {
+
+        String message;
+        String password = keyPasswordJson.getPassword();
+        String key = keyPasswordJson.getKey();
+
+        if(password.length() > 5) {
+
+            try {
+                userService.activateUser(key, password);
+
+            } catch(UserNotFoundException ex) {
+
+                message = "No corresponding user found or invalid key!";
+                return JsonUtil.toJson(new GenericResponseJson(false, message));
+            }
+
+        } else {
+            message = "Password has to contain at least 6 characters!";
+            return JsonUtil.toJson(new GenericResponseJson(false, message));
+        }
+
+        return JsonUtil.toJson(new GenericResponseJson(true));
     }
 
     @GetMapping(value = "/admin/users")

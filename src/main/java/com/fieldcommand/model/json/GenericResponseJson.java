@@ -9,6 +9,11 @@ public class GenericResponseJson { // others should extend this class
 
     }
 
+    public GenericResponseJson(boolean success, String information) {
+        this.success = success;
+        this.information = information;
+    }
+
     public GenericResponseJson(boolean success) {
         this.success = success;
     }

@@ -1,4 +1,4 @@
-package com.fieldcommand.util;
+package com.fieldcommand.utility;
 
 import java.util.Random;
 

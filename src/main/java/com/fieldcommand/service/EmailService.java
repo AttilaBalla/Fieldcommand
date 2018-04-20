@@ -29,7 +29,7 @@ public class EmailService {
         message.setTo(email);
         message.setSubject("A new Fieldcommand account has been created for you");
         message.setText("Hi there! An account has been created for You on Fieldcommand. \n\n" +
-                        "Follow this link to get started: [link to be added here]/" + activationCode);
+                        "Follow this link to get started: http://localhost:8080/activate?id=" + activationCode);
 
         javaMailSender.send(message);
 

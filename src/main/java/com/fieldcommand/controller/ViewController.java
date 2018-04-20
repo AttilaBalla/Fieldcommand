@@ -38,9 +38,14 @@ public class ViewController {
             return "/fragments/subpages/" + subPage;
         }
     }
-    //temporary
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String renderLogin() {
         return "login";
+    }
+
+    @RequestMapping(value = "/activate", method = RequestMethod.GET)
+    public String renderActivate() {
+        return "activate";
     }
 }

@@ -1,4 +1,4 @@
-package com.fieldcommand.util;
+package com.fieldcommand.utility;
 
 import com.fieldcommand.model.Role;
 import com.fieldcommand.model.RoleType;
@@ -7,7 +7,7 @@ import com.fieldcommand.repository.RoleRepository;
 import com.fieldcommand.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import static com.fieldcommand.util.KeyGenerator.*;
+import static com.fieldcommand.utility.KeyGenerator.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;

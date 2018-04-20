@@ -6,24 +6,17 @@ import com.fieldcommand.model.User;
 import com.fieldcommand.model.json.GenericResponseJson;
 import com.fieldcommand.repository.RoleRepository;
 import com.fieldcommand.repository.UserRepository;
+import com.fieldcommand.utility.UserNotFoundException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static com.fieldcommand.util.KeyGenerator.*;
+import static com.fieldcommand.utility.KeyGenerator.*;
 
 @Service
 public class UserService {
@@ -111,5 +104,26 @@ public class UserService {
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());
 
         return true;
+    }
+
+    public void activateUser(String key, String password) throws UserNotFoundException {
+
+        User user = userRepository.findUserByActivationKey(key);
+
+        if(user == null) {
+            throw new UserNotFoundException("No user belongs to that key!");
+        }
+
+        String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        user.setPassword(passwordHash);
+        user.setActivationKey("");
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findByRole(RoleType.ROLE_USER));
+        user.setRoles(roles);
+
+        userRepository.save(user);
+        logger.info("An account has been activated: {}", user.getUsername());
+
     }
 }

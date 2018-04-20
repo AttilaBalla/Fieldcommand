@@ -18,12 +18,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // temporary; WIP
         http
             .authorizeRequests()
-            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/admin/**").permitAll()
             .antMatchers("/about").permitAll()
             .antMatchers("/releases").permitAll()
             .antMatchers("/swrstatus").permitAll()
+            .antMatchers("/activate").permitAll()
             .antMatchers("/").permitAll()
             .anyRequest().authenticated()
             .and()
@@ -33,7 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout()
             .logoutSuccessUrl("/login?logout")
-            .permitAll();
+            .permitAll()
+            .and()
+            .csrf().disable();
     }
 
 }
