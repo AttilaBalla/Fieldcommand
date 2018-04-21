@@ -4,8 +4,6 @@ import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import javax.persistence.*;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -15,16 +13,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column
     private String username;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name="users_roles",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")}
-    )
-    private Set<Role> roles = new HashSet<>();
 
     @Column
     private String password;
@@ -32,8 +22,8 @@ public class User {
     @Column(unique=true, nullable=false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private RoleType displayedRole;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Role role;
 
     private String activationKey;
 
@@ -45,23 +35,17 @@ public class User {
         this.username = username;
     }
 
+    public User(String email, String username, Role role) {
+        this.email = email;
+        this.username = username;
+        this.role = role;
+    }
+
     public User(String email, String username, Role role, String activationKey) {
         this.email = email;
         this.username = username;
-        this.addRole(role);
+        this.role = role;
         this.activationKey = activationKey;
-    }
-
-    private void findDisplayedRole() {
-        int highest = 0;
-        for (Role role: roles
-             ) {
-                int power = role.getPower();
-            if (power > highest) {
-                highest = power;
-                this.displayedRole = role.getRole();
-            }
-        }
     }
 
     public HashMap<String, String> getSimpleUserDetails() {
@@ -69,12 +53,10 @@ public class User {
         userData.put("id", id.toString());
         userData.put("username", username);
         userData.put("email", email);
-        userData.put("role", displayedRole.toString());
+        userData.put("role", role.toString());
 
         return userData;
     }
-
-
 
     public Long getId() {
         return id;
@@ -92,27 +74,17 @@ public class User {
         this.username = username;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRoleString() {
+        return role.toString();
     }
 
-    public Set<String> getRolesInStringFormat() {
-        Set<String> stringRoles = new HashSet<>();
-        this.roles.forEach( (role) -> stringRoles.add(role.getRoleString()));
-        return stringRoles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-        this.findDisplayedRole();
-    }
+    public void setRole(Role role) {
+        this.role = role;
 
-    public void addRole(Role role) {
-        if (this.roles == null || this.roles.isEmpty()) {
-            this.roles = new HashSet<>();
-        }
-        this.roles.add(role);
-        this.findDisplayedRole();
     }
 
     public String getPassword() {
@@ -139,20 +111,12 @@ public class User {
         this.activationKey = key;
     }
 
-    public RoleType getDisplayedRole() {
-        return displayedRole;
-    }
-
-    public void setDisplayedRole(RoleType displayedRole) {
-        this.displayedRole = displayedRole;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", roles=" + roles +
+                ", role=" + role +
                 ", email='" + email + '\'' +
                 '}';
     }

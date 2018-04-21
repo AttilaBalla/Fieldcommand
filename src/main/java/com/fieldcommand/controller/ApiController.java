@@ -4,7 +4,6 @@ import com.fieldcommand.user.User;
 import com.fieldcommand.json.GenericResponseJson;
 import com.fieldcommand.json.InviteJson;
 import com.fieldcommand.json.KeyPasswordJson;
-import com.fieldcommand.role.RoleService;
 import com.fieldcommand.swr_net.SwrNetService;
 import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.JsonUtil;
@@ -24,13 +23,11 @@ public class ApiController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private UserService userService;
-    private RoleService roleService;
     private SwrNetService swrNetService;
 
     @Autowired
-    public void setUserService(UserService userService, RoleService roleService, SwrNetService swrNetService) {
+    public void setUserService(UserService userService, SwrNetService swrNetService) {
         this.userService = userService;
-        this.roleService = roleService;
         this.swrNetService = swrNetService;
     }
 
@@ -105,11 +102,6 @@ public class ApiController {
     @GetMapping(value = "/admin/users")
     public String getUsers() {
         return JsonUtil.toJson(userService.findAll());
-    }
-
-    @GetMapping(value = "/admin/roles")
-    public String getRoles() {
-        return JsonUtil.toJson(roleService.findAll());
     }
 
     @GetMapping(value = "/admin/userRoles")

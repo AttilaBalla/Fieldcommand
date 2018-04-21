@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import static com.fieldcommand.utility.KeyGenerator.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class InitializerBean {
@@ -46,22 +44,18 @@ public class InitializerBean {
 
         List<User> users = new ArrayList<>();
 
-        Role newUser = roleRepository.findByRole(RoleType.ROLE_NEW);
-        Role user = roleRepository.findByRole(RoleType.ROLE_USER);
+        Role newUser = roleRepository.findByRoleType(RoleType.ROLE_NEW);
+        Role user = roleRepository.findByRoleType(RoleType.ROLE_USER);
+        Role admin = roleRepository.findByRoleType(RoleType.ROLE_ADMIN);
+
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
 
-        User admin = new User("user@email4.com", "user4");
-        Set<Role> adminRoles = new HashSet<>();
+        User xattus = new User("xattus@someemail.com", "XAttus", admin);
+        xattus.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
+        users.add(xattus);
 
-        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_ADMIN));
-        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_DEVELOPER));
-        adminRoles.add(roleRepository.findByRole(RoleType.ROLE_USER));
-
-        admin.setRoles(adminRoles);
-
-        userRepository.save(admin);
         userRepository.save(users);
     }
 }

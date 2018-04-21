@@ -11,14 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.fieldcommand.utility.KeyGenerator.*;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,13 +56,13 @@ public class UserService {
         return userData;
     }
 
-    public HashMap<String, Set<String>> findAllRolesOfAllUsers() {
+    public HashMap<String, String> findAllRolesOfAllUsers() {
         List<User> userList = userRepository.findAll();
-        HashMap<String, Set<String>> roles = new HashMap<>();
+        HashMap<String, String> roles = new HashMap<>();
 
         for (User user: userList
              ) {
-            roles.put(user.getId().toString(), user.getRolesInStringFormat());
+            roles.put(user.getId().toString(), user.getRoleString());
         }
 
         return roles;
@@ -87,12 +93,12 @@ public class UserService {
 
     public boolean registerUser(User user) throws RoleNotFoundException, MailException {
 
-        Role userRole = roleRepository.findByRole(RoleType.ROLE_NEW);
+        Role userRole = roleRepository.findByRoleType(RoleType.ROLE_NEW);
 
         if(userRole == null) {
             throw new RoleNotFoundException("Role does not exist in the database!");
         } else {
-            user.addRole(userRole);
+            user.setRole(userRole);
         }
 
         String activationKey = generateKey();
@@ -117,12 +123,42 @@ public class UserService {
 
         user.setPassword(passwordHash);
         user.setActivationKey("");
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByRole(RoleType.ROLE_USER));
-        user.setRoles(roles);
+        user.setRole(roleRepository.findByRoleType(RoleType.ROLE_USER));
 
         userRepository.save(user);
         logger.info("An account has been activated: {}", user.getUsername());
 
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findUserByUsername(username);
+
+        if (user == null) {
+            String message = "Username not found: " + username;
+            logger.info(message);
+            throw new UsernameNotFoundException(message);
+        }
+
+        List<GrantedAuthority> authorities = user.getRole().getRoleType().getAuthorities()
+                .stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+        authorities.add(new SimpleGrantedAuthority(user.getRoleString()));
+
+        return new org.springframework.security.core.userdetails.User(
+                username,
+                user.getPassword(),
+                (user.getRole().getRoleType() != RoleType.ROLE_DISABLED), // enabled
+                true, //Account Not Expired
+                true, //Credentials Not Expired
+                true,//Account Not Locked
+                authorities
+        ) {
+        };
+
+    }
+
+
 }

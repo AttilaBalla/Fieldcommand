@@ -1,6 +1,8 @@
 package com.fieldcommand.role;
 
+
 import com.fieldcommand.user.User;
+
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,21 +16,29 @@ public class Role {
     @GeneratedValue
     private Long id;
 
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
+
     @Enumerated(EnumType.STRING)
-    private RoleType role;
+    private RoleType roleType;
 
     @Column(name = "power")
     private Integer power;
 
-    @ManyToMany( mappedBy = "roles")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.MERGE)
     private Set<User> users = new HashSet<>();
 
     Role() {
     }
 
-    public Role( RoleType role, int power){
+    public Role(RoleType roleType, int power){
 
-        this.role = role;
+        this.roleType = roleType;
         this.power = power;
     }
 
@@ -36,37 +46,20 @@ public class Role {
         return id;
     }
 
-    public HashMap<String, String> convertToMap() {
-        HashMap<String, String> roleData = new HashMap<>();
-        roleData.put("roleType", role.toString());
-        roleData.put("power", power.toString());
-
-        return roleData;
-
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
     public RoleType getRole() {
-        return role;
+        return roleType;
     }
 
-    public String getRoleString() {
-        return role.toString();
+    private String getRoleString() {
+        return roleType.toString();
     }
 
     public void setRole(RoleType role) {
-        this.role = role;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
+        this.roleType = role;
     }
 
     public Integer getPower() {
@@ -79,7 +72,15 @@ public class Role {
 
     @Override
     public String toString() {
-        return "Role id: " + id + ", Role: " + role + " Role power: " + power;
+        return getRoleString();
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }
 
