@@ -1,12 +1,11 @@
-package com.fieldcommand.service;
+package com.fieldcommand.user;
 
-import com.fieldcommand.model.Role;
-import com.fieldcommand.model.RoleType;
-import com.fieldcommand.model.User;
-import com.fieldcommand.model.json.GenericResponseJson;
-import com.fieldcommand.repository.RoleRepository;
-import com.fieldcommand.repository.UserRepository;
-import com.fieldcommand.utility.UserNotFoundException;
+import com.fieldcommand.role.Role;
+import com.fieldcommand.role.RoleType;
+import com.fieldcommand.json.GenericResponseJson;
+import com.fieldcommand.role.RoleRepository;
+import com.fieldcommand.utility.EmailSender;
+import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +24,15 @@ public class UserService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-    private EmailService emailService;
+    private EmailSender emailSender;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       EmailService emailService) {
+                       EmailSender emailSender) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.emailService = emailService;
+        this.emailSender = emailSender;
     }
 
         private User findUserByEmail(String email) {
@@ -98,7 +97,7 @@ public class UserService {
 
         String activationKey = generateKey();
         user.setActivationKey(activationKey);
-        emailService.sendMessage(user.getEmail(), activationKey);
+        emailSender.sendMessage(user.getEmail(), activationKey);
 
         userRepository.save(user);
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());

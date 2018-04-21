@@ -1,6 +1,5 @@
-package com.fieldcommand.repository;
+package com.fieldcommand.user;
 
-import com.fieldcommand.model.User;
 import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 

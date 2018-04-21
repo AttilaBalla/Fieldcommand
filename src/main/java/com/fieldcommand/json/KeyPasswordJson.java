@@ -1,4 +1,4 @@
-package com.fieldcommand.model.json;
+package com.fieldcommand.json;
 
 public class KeyPasswordJson {
 

@@ -1,7 +1,5 @@
-package com.fieldcommand.repository;
+package com.fieldcommand.role;
 
-import com.fieldcommand.model.Role;
-import com.fieldcommand.model.RoleType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

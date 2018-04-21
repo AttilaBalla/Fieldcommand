@@ -1,14 +1,14 @@
 package com.fieldcommand.controller;
 
-import com.fieldcommand.model.User;
-import com.fieldcommand.model.json.GenericResponseJson;
-import com.fieldcommand.model.json.InviteJson;
-import com.fieldcommand.model.json.KeyPasswordJson;
-import com.fieldcommand.service.RoleService;
-import com.fieldcommand.service.SwrNetService;
-import com.fieldcommand.service.UserService;
+import com.fieldcommand.user.User;
+import com.fieldcommand.json.GenericResponseJson;
+import com.fieldcommand.json.InviteJson;
+import com.fieldcommand.json.KeyPasswordJson;
+import com.fieldcommand.role.RoleService;
+import com.fieldcommand.swr_net.SwrNetService;
+import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.JsonUtil;
-import com.fieldcommand.utility.UserNotFoundException;
+import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

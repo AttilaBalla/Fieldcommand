@@ -1,10 +1,10 @@
 package com.fieldcommand.utility;
 
-import com.fieldcommand.model.Role;
-import com.fieldcommand.model.RoleType;
-import com.fieldcommand.model.User;
-import com.fieldcommand.repository.RoleRepository;
-import com.fieldcommand.repository.UserRepository;
+import com.fieldcommand.role.Role;
+import com.fieldcommand.role.RoleType;
+import com.fieldcommand.user.User;
+import com.fieldcommand.role.RoleRepository;
+import com.fieldcommand.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static com.fieldcommand.utility.KeyGenerator.*;

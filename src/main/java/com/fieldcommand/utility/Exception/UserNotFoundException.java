@@ -1,4 +1,4 @@
-package com.fieldcommand.utility;
+package com.fieldcommand.utility.Exception;
 
 public class UserNotFoundException extends Exception {
 

@@ -1,4 +1,4 @@
-package com.fieldcommand.model;
+package com.fieldcommand.role;
 
 public enum RoleType {
 

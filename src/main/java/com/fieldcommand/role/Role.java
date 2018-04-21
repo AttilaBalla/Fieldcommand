@@ -1,5 +1,6 @@
-package com.fieldcommand.model;
+package com.fieldcommand.role;
 
+import com.fieldcommand.user.User;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
