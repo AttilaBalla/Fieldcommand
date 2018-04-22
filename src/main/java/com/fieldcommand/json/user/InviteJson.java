@@ -1,4 +1,4 @@
-package com.fieldcommand.json;
+package com.fieldcommand.json.user;
 
 public class InviteJson {
 

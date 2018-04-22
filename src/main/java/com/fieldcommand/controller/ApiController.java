@@ -1,9 +1,10 @@
 package com.fieldcommand.controller;
 
+import com.fieldcommand.json.user.UpdateJson;
 import com.fieldcommand.user.User;
 import com.fieldcommand.json.GenericResponseJson;
-import com.fieldcommand.json.InviteJson;
-import com.fieldcommand.json.KeyPasswordJson;
+import com.fieldcommand.json.user.InviteJson;
+import com.fieldcommand.json.user.KeyPasswordJson;
 import com.fieldcommand.swr_net.SwrNetService;
 import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.JsonUtil;
@@ -97,6 +98,31 @@ public class ApiController {
         }
 
         return JsonUtil.toJson(new GenericResponseJson(true));
+    }
+
+    @PostMapping("/admin/updateuser")
+    public String updateUser(@RequestBody UpdateJson updateJson) {
+
+        System.out.println(updateJson.toString());
+
+        GenericResponseJson response = new GenericResponseJson();
+        try {
+            userService.updateUser(updateJson);
+        } catch (UserNotFoundException ex) {
+
+            response.setSuccess(false);
+            response.setInformation("No such user exists!");
+
+        } catch (IllegalArgumentException ex) {
+
+            response.setSuccess(false);
+            response.setInformation("Internal error occured - please notify the owner.");
+
+        }
+
+        response.setSuccess(true);
+
+        return JsonUtil.toJson(response);
     }
 
     @GetMapping(value = "/admin/users")

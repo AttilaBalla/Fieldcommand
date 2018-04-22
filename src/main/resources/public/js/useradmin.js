@@ -9,6 +9,7 @@ function loadUsers() {
             populateUserTable(i, user);
           });
           loadRoles();
+          prepUpdateForm();
         },
         error: function(response) {
             console.log(response);
@@ -86,10 +87,10 @@ function buildForm(user) {
                       })
                     .html(`
                     <h6>Roles</h6>
-                    <input type="radio" name="roles" value="ROLE_ADMIN"/><span class="badge badge-danger ml-2">Admin</span>
-                    <input type="radio" name="roles" value="ROLE_DEVELOPER"/><span class="badge badge-warning ml-2">Developer</span>
-                    <input type="radio" name="roles" value="ROLE_USER"/><span class="badge badge-primary ml-2">User</span>
-                    <input type="radio" name="roles" value="ROLE_DISABLED"/><span class="badge badge-dark ml-2">Disabled</span>
+                    <input type="radio" name="role" value="ROLE_ADMIN"/><span class="badge badge-danger ml-2">Admin</span>
+                    <input type="radio" name="role" value="ROLE_DEVELOPER"/><span class="badge badge-warning ml-2">Developer</span>
+                    <input type="radio" name="role" value="ROLE_USER"/><span class="badge badge-primary ml-2">User</span>
+                    <input type="radio" name="role" value="ROLE_DISABLED"/><span class="badge badge-dark ml-2">Disabled</span>
                 `);
 
     $userDetails = $("<div/>")

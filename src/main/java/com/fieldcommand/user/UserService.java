@@ -1,5 +1,6 @@
 package com.fieldcommand.user;
 
+import com.fieldcommand.json.user.UpdateJson;
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.json.GenericResponseJson;
@@ -160,5 +161,25 @@ public class UserService implements UserDetailsService{
 
     }
 
+    public void updateUser(UpdateJson updateJson) throws UserNotFoundException, IllegalArgumentException {
 
+        Long userId = updateJson.getId();
+        String roleString = updateJson.getRole();
+
+        User user = userRepository.findUserById(userId);
+        System.out.println(roleString);
+        // Will throw IllegalArgument if not exact match
+        Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
+
+        if(user == null) {
+            throw new UserNotFoundException("No user exists with this ID!");
+        }
+
+        user.setEmail(updateJson.getEmail());
+        user.setUsername(updateJson.getUsername());
+        user.setRole(role);
+
+        userRepository.save(user);
+
+    }
 }

@@ -44,3 +44,13 @@
     border-bottom: solid rgb(14, 117, 177);
     outline: none;
 }
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #2b435e inset;
+    -webkit-text-fill-color: white;
+}
+
+input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0px 1000px #2b435e inset;
+    -webkit-text-fill-color: white;
+}
