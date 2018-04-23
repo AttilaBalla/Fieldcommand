@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
@@ -101,9 +102,9 @@ public class ApiController {
     }
 
     @PostMapping("/admin/updateuser")
-    public String updateUser(@RequestBody UpdateJson updateJson) {
+    public String updateUser(Authentication authentication, @RequestBody UpdateJson updateJson) {
 
-        System.out.println(updateJson.toString());
+        //userService.validateAccess()
 
         GenericResponseJson response = new GenericResponseJson();
         try {

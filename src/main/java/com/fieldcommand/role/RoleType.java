@@ -16,12 +16,8 @@ public enum RoleType {
 
     static {
         ROLE_ADMIN.authorities = Arrays.asList(
-                "AUTHORITY_SELF_LOGIN",
-                "AUTHORITY_ADMIN_CHANGENAME",
-                "AUTHORITY_ADMIN_CHANGEMAIL",
-                "AUTHORITY_ADMIN_RESETPW",
-                "AUTHORITY_ADMIN_ASSIGNROLE",
-                "AUTHORITY_ADMIN_DISABLE",
+                "AUTHORITY_LOGIN",
+                "AUTHORITY_ADMIN",
                 "AUTHORITY_GR_VIEW",
                 "AUTHORITY_GR_COMMENT",
                 "AUTHORITY_GR_ADMIN",

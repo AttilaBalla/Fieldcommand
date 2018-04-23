@@ -59,3 +59,13 @@
 .side_navbar a:hover {
     text-decoration: none;
 }
+
+.navbar_right {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown a {
+    color: lightgray;
+    text-decoration: none;
+}

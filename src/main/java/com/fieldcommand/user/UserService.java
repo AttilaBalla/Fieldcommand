@@ -167,7 +167,6 @@ public class UserService implements UserDetailsService{
         String roleString = updateJson.getRole();
 
         User user = userRepository.findUserById(userId);
-        System.out.println(roleString);
         // Will throw IllegalArgument if not exact match
         Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
 
