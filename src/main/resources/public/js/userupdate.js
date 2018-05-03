@@ -2,7 +2,7 @@ function convertToSimpleJson(formArray) {
     var returnArray = {};
     var versions = [];
     for (var i = 0; i < formArray.length; i++){
-        if(formArray[i]['name'] != 'versions') {
+        if(formArray[i]['name'] !== 'versions') {
             returnArray[formArray[i]['name']] = formArray[i]['value'];
         } else {
             versions.push(formArray[i]['value']);

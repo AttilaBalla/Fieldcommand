@@ -42,11 +42,11 @@ public class UserService implements UserDetailsService{
         this.emailSender = emailSender;
     }
 
-        private User findUserByEmail(String email) {
+    private User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
-    public List<HashMap<String, String>> findAll() {
+        public List<HashMap<String, String>> findAll() {
         List<User> users = userRepository.findAll();
         List<HashMap<String, String>> userData = new ArrayList<>();
 
@@ -76,12 +76,16 @@ public class UserService implements UserDetailsService{
             response.setInformation("The fields cannot be empty!");
 
             return response;
-
         }
 
-        User user = findUserByEmail(email);
+        if(userRepository.findUserByUsername(username) != null) {
+            response.setSuccess(false);
+            response.setInformation("An account with this username already exists!");
 
-        if(user != null) {
+            return response;
+        }
+
+        if(userRepository.findUserByEmail(email ) != null) {
             response.setSuccess(false);
             response.setInformation("An account with this e-mail address already exists!");
             return response;

@@ -1,7 +1,6 @@
 package com.fieldcommand.user;
 
 import com.fieldcommand.role.Role;
-import com.fieldcommand.role.RoleType;
 import javax.persistence.*;
 import java.util.HashMap;
 

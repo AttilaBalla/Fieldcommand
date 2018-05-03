@@ -1,4 +1,4 @@
-package com.fieldcommand.utility;
+package com.fieldcommand.config;
 
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
@@ -52,7 +52,7 @@ public class InitializerBean {
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
 
-        User xattus = new User("xattus@someemail.com", "XAttus", admin);
+        User xattus = new User("xattus@gmail.com", "XAttus", admin);
         xattus.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
         users.add(xattus);
 
