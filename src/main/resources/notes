@@ -1,0 +1,3 @@
+- finish request validation for admin panel
+- do frontend so admin link and logout only visible when logged in
+- implement news feed
