@@ -9,6 +9,7 @@ import com.fieldcommand.swr_net.SwrNetService;
 import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.JsonUtil;
 import com.fieldcommand.utility.Exception.UserNotFoundException;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,7 +139,15 @@ public class ApiController {
 
     @GetMapping(value = "/swrstatus")
     public String getSwrStatus() {
-        return JsonUtil.toJson(swrNetService.getStatus());
+        try {
+
+            return JsonUtil.toJson(swrNetService.getStatus());
+        }
+        catch (JSONException ex) {
+            logger.warn("Error occured when retrieving SWR.net status: {}", ex.getMessage());
+
+            return JsonUtil.toJson(new GenericResponseJson(false, "JSON error occured."));
+        }
     }
 
 

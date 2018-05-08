@@ -68,5 +68,6 @@ target
 
 application-dev.properties
 src/main/resources/META-INF/
+.vscode/
 
 # End of https://www.gitignore.io/api/intellij+iml
