@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.HTMLDocument;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 @Service
 public class SwrNetService {
 
@@ -22,11 +27,21 @@ public class SwrNetService {
 
     @Scheduled(fixedDelay = 60000)
     public void updateStatus() throws JSONException {
-        logger.info("Updating SWR.net status...");
         status =  JsonUtil.getJson(url);
+        logger.info("Updated SWR.net status -> {}", status);
     }
 
-    public JSONObject getStatus() {
+    public Map getStatus() throws JSONException {
+
+        Map<String, String> status = new HashMap<>();
+
+        Iterator keys = this.status.keys();
+
+        while(keys.hasNext()) {
+            String key = keys.next().toString();
+            status.put(key, this.status.get(key).toString());
+        }
+
         return status;
     }
 }

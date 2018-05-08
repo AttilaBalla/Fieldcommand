@@ -68,6 +68,7 @@ target
 
 application-dev.properties
 src/main/resources/META-INF/
+.vscode/
 
 .vscode/
 node_modules/

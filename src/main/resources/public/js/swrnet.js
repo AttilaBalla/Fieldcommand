@@ -1,36 +1,35 @@
-'use strict';
-
-const React = require('react');
-const ReactDOM = require('react-dom');
-
 class SwrNet extends React.Component {
 	content;
 	
-
 	constructor(props) {
 		super(props);
 		this.state = {};
 	}
 
 	componentDidMount() {
-		$.ajax({
-			type: 'GET',
-			url: "/swrstatus",
-			success: function(response) {
-				console.log(JSON.parse(response)["nameValuePairs"]);
-				this.setState(JSON.parse(response)["nameValuePairs"]);
-    		}
-		});
+
+        fetch("/swrstatus")
+      	.then(res => res.json())
+      	.then(
+        (result) => {
+		  	this.setState(result);
+		  	console.log(this.state);
+        },
+        (error) => {
+          	this.setState({
+            isLoaded: true,
+            error
+          	});
+        });
 	}
 
 	render() {
-
 		if(this.state["successful"]) {
 
 			const count = this.state["count"] > 0 ? (
 				<span className="text-success">{this.state["count"]}</span>
 			) : (
-				<span>0</span>
+				<span>{this.state["count"]}<i className="fa fa-user ml-1 mt-1" aria-hidden="true"></i></span>
 			);
 
 			this.content =
