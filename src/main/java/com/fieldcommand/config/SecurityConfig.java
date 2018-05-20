@@ -1,116 +1,94 @@
 package com.fieldcommand.config;
 
+import com.fieldcommand.security.JwtAuthenticationEntryPoint;
+import com.fieldcommand.security.JwtAuthenticationFilter;
 import com.fieldcommand.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 
     private UserService userService;
 
-    public SecurityConfig(UserService userService) {
+    private JwtAuthenticationEntryPoint unauthroizedHandler;
+
+    @Autowired
+    public SecurityConfig(UserService userService, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.userService = userService;
+        this.unauthroizedHandler = jwtAuthenticationEntryPoint;
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService);
-        auth.setPasswordEncoder(passwordEncoder());
-        return auth;
-    }
-
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**/*.{js,html}");
-        web.debug(false);
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
+
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // temporary; WIP
         http
-            .authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("AUTHORITY_LOGIN")
-                .antMatchers("/admin?subPage=useradmin").hasRole("ADMIN")
-                .antMatchers("/about").permitAll()
-                .antMatchers("/releases").permitAll()
-                .antMatchers("/swrstatus").permitAll()
-                .antMatchers("/activate").permitAll()
-                .antMatchers("/").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .formLogin()
-                .loginPage("/login")
-                .successHandler(authenticationSuccessHandler())
-                .failureHandler(authenticationFailureHandler())
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthroizedHandler)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**")
                 .permitAll()
-            .and()
-            .logout()
-            .logoutSuccessUrl("/login?logout")
-            .permitAll()
-            .and()
-            .csrf().disable();
-    }
+                .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                .permitAll()
+                .antMatchers("/api/swrstatus")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated();
 
-    @Bean
-    AuthenticationSuccessHandler authenticationSuccessHandler() {
-
-        return new SimpleUrlAuthenticationSuccessHandler() {
-
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request,
-                                                HttpServletResponse response,
-                                                Authentication authentication) throws IOException, ServletException {
-
-                String targetUrl = "/";
-
-                getRedirectStrategy().sendRedirect(request, response, targetUrl);
-            }
-        };
-    }
-
-    @Bean
-    AuthenticationFailureHandler authenticationFailureHandler() {
-        return (request, response, exception) -> {
-            if (exception instanceof DisabledException) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User account suspended");
-            } else {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
-            }
-        };
-    }
-
-    @Bean
-    LogoutSuccessHandler logoutSuccessHandler() {
-        return (request, response, authentication) ->
-                response.sendRedirect("/");
+        // Add our custom JWT security filter
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
+
+
+
+
+
 
 }
 
