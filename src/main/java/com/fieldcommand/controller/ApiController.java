@@ -1,10 +1,10 @@
 package com.fieldcommand.controller;
 
-import com.fieldcommand.json.user.UpdateJson;
+import com.fieldcommand.payload.user.UpdateJson;
 import com.fieldcommand.user.User;
-import com.fieldcommand.json.GenericResponseJson;
-import com.fieldcommand.json.user.InviteJson;
-import com.fieldcommand.json.user.KeyPasswordJson;
+import com.fieldcommand.payload.GenericResponseJson;
+import com.fieldcommand.payload.user.InviteJson;
+import com.fieldcommand.payload.user.KeyPasswordJson;
 import com.fieldcommand.swr_net.SwrNetService;
 import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.JsonUtil;
@@ -34,7 +34,7 @@ public class ApiController {
         this.swrNetService = swrNetService;
     }
 
-    @PostMapping(value = "/admin/invite")
+    @PostMapping(value = "/api/admin/invite")
     public String inviteUser(@RequestBody InviteJson invite) {
 
         String internalError = "An internal error occurred. Try again later!";
@@ -76,7 +76,7 @@ public class ApiController {
         return JsonUtil.toJson(response);
     }
 
-    @PostMapping(value = "/activate")
+    @PostMapping(value = "/api/activate")
     public String activateAccount(@RequestBody KeyPasswordJson keyPasswordJson) {
 
         String message;
@@ -102,7 +102,7 @@ public class ApiController {
         return JsonUtil.toJson(new GenericResponseJson(true));
     }
 
-    @PostMapping("/admin/updateuser")
+    @PostMapping("/api/admin/updateuser")
     public String updateUser(Authentication authentication, @RequestBody UpdateJson updateJson) {
 
         //userService.validateAccess()
@@ -127,17 +127,20 @@ public class ApiController {
         return JsonUtil.toJson(response);
     }
 
-    @GetMapping(value = "/admin/users")
+
+    @GetMapping(value = "/api/admin/users")
     public String getUsers() {
         return JsonUtil.toJson(userService.findAll());
     }
 
-    @GetMapping(value = "/admin/userRoles")
+    @GetMapping(value = "/api/admin/userRoles")
     public String getUserRoles() {
         return JsonUtil.toJson(userService.findAllRolesOfAllUsers());
     }
 
-    @GetMapping(value = "/swrstatus")
+
+    @CrossOrigin
+    @GetMapping(value = "/api/swrstatus")
     public String getSwrStatus() {
         try {
 
