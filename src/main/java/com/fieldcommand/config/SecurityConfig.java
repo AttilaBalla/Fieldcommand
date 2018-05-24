@@ -27,7 +27,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private UserService userService;
 
     private JwtAuthenticationEntryPoint unauthroizedHandler;
@@ -59,9 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
-                .csrf()
-                .disable()
+                .cors()
+                .and()
+                .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthroizedHandler)
                 .and()
@@ -71,24 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**")
                 .permitAll()
-                .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
-                .permitAll()
-                .antMatchers("/api/swrstatus")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+                .antMatchers("/api/swrStatus")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
 
-        // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
-
-
-
-
-
-
 }
-
