@@ -32,10 +32,8 @@ public class UserController {
     }
 
     @GetMapping(value =  "/api/user/currentUser")
-    public String getLoggedInUser(@AuthenticationPrincipal UserPrincipal loggedInUser) {
-        System.out.println(loggedInUser.getUsername());
-        System.out.println(loggedInUser.getAuthorities());
-        return "done";
+    public UserPrincipal getLoggedInUser(@AuthenticationPrincipal UserPrincipal loggedInUser) {
+        return loggedInUser;
     }
 
     @PostMapping(value = "/api/admin/invite")
