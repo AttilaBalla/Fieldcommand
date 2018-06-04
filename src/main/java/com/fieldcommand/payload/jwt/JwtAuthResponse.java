@@ -1,4 +1,4 @@
-package com.fieldcommand.payload.user;
+package com.fieldcommand.payload.jwt;
 
 public class JwtAuthResponse {
 

@@ -1,6 +1,6 @@
 package com.fieldcommand.controller;
 
-import com.fieldcommand.payload.user.JwtAuthResponse;
+import com.fieldcommand.payload.jwt.JwtAuthResponse;
 import com.fieldcommand.payload.user.LoginJson;
 import com.fieldcommand.role.RoleRepository;
 import com.fieldcommand.security.JwtTokenProvider;
