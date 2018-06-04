@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,9 +22,12 @@ public class UserPrincipal implements UserDetails{
     @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password,
+    private List<String> simpleAuthorities = new ArrayList<>();
+
+    private UserPrincipal(Long id, String name, String username, String email, String password,
                          Collection<? extends GrantedAuthority> authorities) {
 
         this.id = id;
@@ -31,9 +35,10 @@ public class UserPrincipal implements UserDetails{
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        createSimpleAuthList(authorities);
     }
 
-    public static UserPrincipal create(User user) {
+    static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = user.getRole().getRoleType().getAuthorities()
                 .stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -45,7 +50,16 @@ public class UserPrincipal implements UserDetails{
                 user.getEmail(),
                 user.getPassword(),
                 authorities
+
+
         );
+    }
+
+    private void createSimpleAuthList(Collection<? extends GrantedAuthority> authorities) {
+        for (GrantedAuthority authority: authorities
+             ) {
+            this.simpleAuthorities.add(authority.getAuthority());
+        }
     }
 
     @Override
@@ -89,5 +103,13 @@ public class UserPrincipal implements UserDetails{
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public List<String> getSimpleAuthorities() {
+        return simpleAuthorities;
+    }
+
+    public void setSimpleAuthorities(List<String> simpleAuthorities) {
+        this.simpleAuthorities = simpleAuthorities;
     }
 }
