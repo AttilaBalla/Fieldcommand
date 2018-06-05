@@ -1,6 +1,6 @@
 package com.fieldcommand.user;
 
-import com.fieldcommand.newsfeed.Newspost;
+import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.role.Role;
 import javax.persistence.*;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
-    private Set<Newspost> newsPosts = new HashSet<>();
+    private Set<NewsPost> newsPosts = new HashSet<>();
 
     private String activationKey;
 

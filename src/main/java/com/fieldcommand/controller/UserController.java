@@ -104,7 +104,7 @@ public class UserController {
         return JsonUtil.toJson(new GenericResponseJson(true));
     }
 
-    @PostMapping("/api/admin/updateuser")
+    @PostMapping("/api/admin/updateUser")
     public String updateUser(@RequestBody UpdateJson updateJson) {
 
         //userService.validateAccess()

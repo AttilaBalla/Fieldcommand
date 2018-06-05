@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-public class Newspost {
+@Table(name = "newsposts")
+public class NewsPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +22,9 @@ public class Newspost {
 
     private Timestamp timestamp;
 
-    Newspost() {}
+    NewsPost() {}
 
-    Newspost(String title, String content, User owner) {
+    public NewsPost(String title, String content, User owner) {
 
         this.title = title;
         this.content = content;
