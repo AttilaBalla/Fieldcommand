@@ -140,19 +140,38 @@ public class UserService implements UserDetailsService {
         String roleString = updateJson.getRole();
 
         User user = userRepository.findUserById(userId);
-        // Will throw IllegalArgument if not exact match
         Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
 
-        if(user == null) {
+        if (user == null) {
             throw new UserNotFoundException("No user exists with this ID!");
         }
 
-        user.setEmail(updateJson.getEmail());
-        user.setUsername(updateJson.getUsername());
-        user.setRole(role);
+        if(validateUpdate(updateJson)) { // validate unique name & email constraint
+            user.setEmail(updateJson.getEmail());
+            user.setUsername(updateJson.getUsername());
+            user.setRole(role);
 
-        userRepository.save(user);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Username and Email must be unique for every user!");
+        }
+    }
 
+    private boolean validateUpdate(UpdateJson updateJson) {
+
+        long userId = updateJson.getId();
+        String username = updateJson.getUsername();
+        String email = updateJson.getEmail();
+
+        User user = userRepository.findUserByEmail(email);
+
+        if(user != null && user.getId() != userId) {
+            return false;
+        }
+
+        user = userRepository.findUserByUsername(username);
+
+        return user == null || user.getId() == userId;
     }
 
     @Transactional

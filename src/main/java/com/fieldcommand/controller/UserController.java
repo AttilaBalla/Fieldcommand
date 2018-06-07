@@ -12,6 +12,7 @@ import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -104,10 +105,12 @@ public class UserController {
         return JsonUtil.toJson(new GenericResponseJson(true));
     }
 
-    @PostMapping("/api/admin/updateuser")
-    public String updateUser(@RequestBody UpdateJson updateJson) {
+    @PostMapping("/api/admin/updateUser")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateJson updateJson) {
 
-        //userService.validateAccess()
+        //TODO access validation
+
+        logger.info(updateJson.toString());
 
         GenericResponseJson response = new GenericResponseJson();
         try {
@@ -116,17 +119,19 @@ public class UserController {
 
             response.setSuccess(false);
             response.setInformation("No such user exists!");
+            return ResponseEntity.badRequest().body(response);
 
         } catch (IllegalArgumentException ex) {
 
             response.setSuccess(false);
-            response.setInformation("Internal error occured - please notify the owner.");
+            response.setInformation(ex.getMessage());
+            return ResponseEntity.badRequest().body(response);
 
         }
 
         response.setSuccess(true);
 
-        return JsonUtil.toJson(response);
+        return ResponseEntity.ok(response);
     }
 
 
