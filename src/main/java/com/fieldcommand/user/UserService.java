@@ -6,6 +6,7 @@ import com.fieldcommand.role.RoleType;
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.role.RoleRepository;
 import com.fieldcommand.utility.EmailSender;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
@@ -134,30 +135,54 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void updateUser(UpdateJson updateJson) throws UserNotFoundException, IllegalArgumentException {
+    public void updateUser(UpdateJson updateJson, String updaterName)
+            throws UserNotFoundException, IllegalArgumentException, UnauthorizedModificationException {
 
         Long userId = updateJson.getId();
         String roleString = updateJson.getRole();
 
         User user = userRepository.findUserById(userId);
+        User updater = userRepository.findUserByUsername(updaterName);
         Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
 
-        if (user == null) {
+        if(user == null) {
             throw new UserNotFoundException("No user exists with this ID!");
         }
 
-        if(validateUpdate(updateJson)) { // validate unique name & email constraint
+        if(updater == null) {
+            throw new UserNotFoundException("Could not retrieve information about updating user!");
+        }
+
+        if(!validateAuthorizationToUpdate(updater, user, role)) {
+            throw new UnauthorizedModificationException("Update is not authorized for this account!");
+        }
+
+        if(!validateUniqueNameAndEmail(updateJson)) { // validate unique name & email constraint
+            throw new IllegalArgumentException("Username and Email must be unique for every user!");
+        } else {
             user.setEmail(updateJson.getEmail());
             user.setUsername(updateJson.getUsername());
             user.setRole(role);
 
             userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("Username and Email must be unique for every user!");
+
         }
     }
 
-    private boolean validateUpdate(UpdateJson updateJson) {
+    private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {
+
+        if(user.getRole().getRoleType() == RoleType.ROLE_OWNER &&
+                role.getRoleType() != RoleType.ROLE_OWNER) {
+            return false; // owner cannot demote himself but can change other fields
+        }
+
+        if(user == updater) { // user is updating it's own stuff
+            return true;
+        } else return updater.getRole().getPower() > user.getRole().getPower();
+
+    }
+
+    private boolean validateUniqueNameAndEmail(UpdateJson updateJson) {
 
         long userId = updateJson.getId();
         String username = updateJson.getUsername();
