@@ -27,11 +27,17 @@ public class UserPrincipal implements UserDetails{
 
     private List<String> simpleAuthorities = new ArrayList<>();
 
-    private UserPrincipal(Long id, String name, String username, String email, String password,
+    private String roleType;
+
+    private int rolePower;
+
+    private UserPrincipal(Long id, String name, String roleType, int rolePower, String username, String email, String password,
                          Collection<? extends GrantedAuthority> authorities) {
 
         this.id = id;
         this.username = username;
+        this.roleType = roleType;
+        this.rolePower = rolePower;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -43,15 +49,17 @@ public class UserPrincipal implements UserDetails{
                 .stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleType().toString()));
+
         return new UserPrincipal(
                 user.getId(),
                 "",
+                user.getRole().getRoleType().toString(),
+                user.getRole().getPower(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities
-
-
         );
     }
 
@@ -111,5 +119,21 @@ public class UserPrincipal implements UserDetails{
 
     public void setSimpleAuthorities(List<String> simpleAuthorities) {
         this.simpleAuthorities = simpleAuthorities;
+    }
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
+    public int getRolePower() {
+        return rolePower;
+    }
+
+    public void setRolePower(int rolePower) {
+        this.rolePower = rolePower;
     }
 }

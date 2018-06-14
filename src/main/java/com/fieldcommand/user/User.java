@@ -47,17 +47,18 @@ public class User {
         this.activationKey = activationKey;
     }
 
-    public HashMap<String, String> getSimpleUserDetails() {
+    HashMap<String, String> getSimpleUserDetails() {
         HashMap<String, String> userData = new HashMap<>();
         userData.put("id", id.toString());
         userData.put("username", username);
         userData.put("email", email);
         userData.put("role", role.toString());
+        userData.put("rolePower", role.getPower().toString());
 
         return userData;
     }
 
-    public Long getId() {
+    Long getId() {
         return id;
     }
 
@@ -73,20 +74,20 @@ public class User {
         this.username = username;
     }
 
-    public String getRoleString() {
+    String getRoleString() {
         return role.toString();
     }
 
-    public Role getRole() {
+    Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    void setRole(Role role) {
         this.role = role;
 
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
     }
 
@@ -94,11 +95,11 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    void setEmail(String email) {
         this.email = email;
     }
 
@@ -106,7 +107,7 @@ public class User {
         return this.activationKey;
     }
 
-    public void setActivationKey(String key) {
+    void setActivationKey(String key) {
         this.activationKey = key;
     }
 
