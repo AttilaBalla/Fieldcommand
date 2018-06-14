@@ -1,31 +1,31 @@
 package com.fieldcommand.user;
 
-import com.fieldcommand.json.user.UpdateJson;
+import com.fieldcommand.payload.user.UpdateJson;
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
-import com.fieldcommand.json.GenericResponseJson;
+import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.role.RoleRepository;
 import com.fieldcommand.utility.EmailSender;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import javax.management.relation.RoleNotFoundException;
+import javax.transaction.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 import static com.fieldcommand.utility.KeyGenerator.*;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -135,54 +135,98 @@ public class UserService implements UserDetailsService{
 
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findUserByUsername(username);
-
-        if (user == null) {
-            String message = "Username not found: " + username;
-            logger.info(message);
-            throw new UsernameNotFoundException(message);
-        }
-
-        List<GrantedAuthority> authorities = user.getRole().getRoleType().getAuthorities()
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        authorities.add(new SimpleGrantedAuthority(user.getRoleString()));
-
-        return new org.springframework.security.core.userdetails.User(
-                username,
-                user.getPassword(),
-                (user.getRole().getRoleType() != RoleType.ROLE_DISABLED), // enabled
-                true, //Account Not Expired
-                true, //Credentials Not Expired
-                true,//Account Not Locked
-                authorities
-        ) {
-        };
-
-    }
-
-    public void updateUser(UpdateJson updateJson) throws UserNotFoundException, IllegalArgumentException {
+    public void updateUser(UpdateJson updateJson, String updaterName)
+            throws UserNotFoundException, IllegalArgumentException, UnauthorizedModificationException {
 
         Long userId = updateJson.getId();
         String roleString = updateJson.getRole();
 
         User user = userRepository.findUserById(userId);
-        // Will throw IllegalArgument if not exact match
+        User updater = userRepository.findUserByUsername(updaterName);
         Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
 
         if(user == null) {
             throw new UserNotFoundException("No user exists with this ID!");
         }
 
-        user.setEmail(updateJson.getEmail());
-        user.setUsername(updateJson.getUsername());
-        user.setRole(role);
+        if(updater == null) {
+            throw new UserNotFoundException("Could not retrieve information about updating user!");
+        }
 
-        userRepository.save(user);
+        if(!validateAuthorizationToUpdate(updater, user, role)) {
+            throw new UnauthorizedModificationException("Update is not authorized for this account!");
+        }
+
+        if(!validateUniqueNameAndEmail(updateJson)) { // validate unique name & email constraint
+            throw new IllegalArgumentException("Username and Email must be unique for every user!");
+        } else {
+            user.setEmail(updateJson.getEmail());
+            user.setUsername(updateJson.getUsername());
+            user.setRole(role);
+
+            userRepository.save(user);
+
+        }
+    }
+
+    private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {
+
+        if(user.getRole().getRoleType() == RoleType.ROLE_OWNER &&
+                role.getRoleType() != RoleType.ROLE_OWNER) {
+            return false; // owner cannot demote himself but can change other fields
+        }
+
+        if(user == updater) { // user is updating it's own stuff
+            return true;
+        } else return updater.getRole().getPower() > user.getRole().getPower();
 
     }
+
+    private boolean validateUniqueNameAndEmail(UpdateJson updateJson) {
+
+        long userId = updateJson.getId();
+        String username = updateJson.getUsername();
+        String email = updateJson.getEmail();
+
+        User user = userRepository.findUserByEmail(email);
+
+        if(user != null && user.getId() != userId) {
+            return false;
+        }
+
+        user = userRepository.findUserByUsername(username);
+
+        return user == null || user.getId() == userId;
+    }
+
+    @Transactional
+    public UserDetails createUserPrincipalByUserId(Long id) {
+        User user = userRepository.findUserById(id);
+
+        return UserPrincipal.create(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+        User user = userRepository.findUserByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User could not be found: " + username);
+        }
+
+        return UserPrincipal.create(user);
+    }
+
+    @Transactional
+    public UserDetails loadUserById(Long id) throws UserNotFoundException {
+        User user = userRepository.findUserById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("User could not be found: " + id);
+        }
+
+        return UserPrincipal.create(user);
+    }
+
 }
