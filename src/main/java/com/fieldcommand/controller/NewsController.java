@@ -21,7 +21,7 @@ public class NewsController {
     @PostMapping("/api/admin/addNewsPost")
     public void addNewsPost(@RequestBody NewsPostJson newsPost) {
 
-        newspostRepository.save(new NewsPost(newsPost.getTitle(), newsPost.getContent(), ));
+        //newspostRepository.save(new NewsPost(newsPost.getTitle(), newsPost.getContent(), ));
 
     }
 

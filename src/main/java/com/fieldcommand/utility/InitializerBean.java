@@ -35,6 +35,7 @@ public class InitializerBean {
         roles.add(new Role(RoleType.ROLE_USER, 10));
         roles.add(new Role(RoleType.ROLE_DEVELOPER, 20));
         roles.add(new Role(RoleType.ROLE_ADMIN, 30));
+        roles.add(new Role(RoleType.ROLE_OWNER, 40));
 
         roleRepository.save(roles);
 
@@ -46,13 +47,13 @@ public class InitializerBean {
 
         Role newUser = roleRepository.findByRoleType(RoleType.ROLE_NEW);
         Role user = roleRepository.findByRoleType(RoleType.ROLE_USER);
-        Role admin = roleRepository.findByRoleType(RoleType.ROLE_ADMIN);
+        Role owner = roleRepository.findByRoleType(RoleType.ROLE_OWNER);
 
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
 
-        User xattus = new User("user@email4.com", "XAttus", admin);
+        User xattus = new User("user@email4.com", "XAttus", owner);
         xattus.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
         users.add(xattus);
 

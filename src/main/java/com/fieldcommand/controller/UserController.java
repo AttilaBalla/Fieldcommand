@@ -2,17 +2,19 @@ package com.fieldcommand.controller;
 
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.payload.user.InviteJson;
-import com.fieldcommand.payload.user.KeyPasswordJson;
 import com.fieldcommand.payload.user.UpdateJson;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserPrincipal;
 import com.fieldcommand.user.UserService;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import com.fieldcommand.utility.Exception.UserNotFoundException;
 import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,55 +80,24 @@ public class UserController {
         return JsonUtil.toJson(response);
     }
 
-    @PostMapping(value = "/api/activate")
-    public String activateAccount(@RequestBody KeyPasswordJson keyPasswordJson) {
-
-        String message;
-        String password = keyPasswordJson.getPassword();
-        String key = keyPasswordJson.getKey();
-
-        if(password.length() > 5) {
-
-            try {
-                userService.activateUser(key, password);
-
-            } catch(UserNotFoundException ex) {
-
-                message = "No corresponding user found or invalid key!";
-                return JsonUtil.toJson(new GenericResponseJson(false, message));
-            }
-
-        } else {
-            message = "Password has to contain at least 6 characters!";
-            return JsonUtil.toJson(new GenericResponseJson(false, message));
-        }
-
-        return JsonUtil.toJson(new GenericResponseJson(true));
-    }
-
     @PostMapping("/api/admin/updateUser")
-    public String updateUser(@RequestBody UpdateJson updateJson) {
-
-        //userService.validateAccess()
+    public ResponseEntity<?> updateUser(@RequestBody UpdateJson updateJson, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
-            userService.updateUser(updateJson);
-        } catch (UserNotFoundException ex) {
+            userService.updateUser(updateJson, authentication.getName());
+
+        } catch (IllegalArgumentException | UnauthorizedModificationException | UserNotFoundException ex) {
 
             response.setSuccess(false);
-            response.setInformation("No such user exists!");
-
-        } catch (IllegalArgumentException ex) {
-
-            response.setSuccess(false);
-            response.setInformation("Internal error occured - please notify the owner.");
+            response.setInformation(ex.getMessage());
+            return ResponseEntity.badRequest().body(response);
 
         }
 
         response.setSuccess(true);
 
-        return JsonUtil.toJson(response);
+        return ResponseEntity.ok(response);
     }
 
 

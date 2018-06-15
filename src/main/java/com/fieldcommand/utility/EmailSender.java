@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailSender {
 
+    @Value("${frontend.address}")
+    private String frontendAddress;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private JavaMailSender javaMailSender;
@@ -29,7 +32,7 @@ public class EmailSender {
         message.setTo(email);
         message.setSubject("A new Fieldcommand account has been created for you");
         message.setText("Hi there! An account has been created for You on Fieldcommand. \n\n" +
-                        "Follow this link to get started: http://localhost:8080/activate?id=" + activationCode);
+                        "Follow this link to get started: "+ frontendAddress + "/activate/" + activationCode);
 
         javaMailSender.send(message);
 
