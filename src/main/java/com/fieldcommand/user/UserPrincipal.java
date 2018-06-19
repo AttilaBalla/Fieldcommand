@@ -1,6 +1,9 @@
 package com.fieldcommand.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fieldcommand.role.RoleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +13,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class UserPrincipal implements UserDetails{
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private Long id;
 
@@ -92,7 +98,7 @@ public class UserPrincipal implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !this.roleType.equals(String.valueOf(RoleType.ROLE_DISABLED));
     }
 
     public Long getId() {
