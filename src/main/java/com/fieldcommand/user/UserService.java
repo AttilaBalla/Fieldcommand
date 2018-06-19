@@ -128,7 +128,10 @@ public class UserService implements UserDetailsService {
 
         user.setPassword(passwordHash);
         user.setActivationKey("");
-        user.setRole(roleRepository.findByRoleType(RoleType.ROLE_USER));
+
+        if(user.getRole().getRoleType() == RoleType.ROLE_NEW) {
+            user.setRole(roleRepository.findByRoleType(RoleType.ROLE_USER));
+        }
 
         userRepository.save(user);
         logger.info("An account has been activated: {}", user.getUsername());
