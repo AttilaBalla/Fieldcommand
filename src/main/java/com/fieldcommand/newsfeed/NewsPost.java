@@ -3,7 +3,8 @@ package com.fieldcommand.newsfeed;
 import com.fieldcommand.user.User;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "newsposts")
@@ -17,18 +18,22 @@ public class NewsPost {
 
     private String content;
 
+    private boolean visibility;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     private User owner;
 
-    private Timestamp timestamp;
+    private String timestamp;
 
     NewsPost() {}
 
-    public NewsPost(String title, String content, User owner) {
+    NewsPost(String title, String content, User owner, boolean visibility) {
 
         this.title = title;
         this.content = content;
         this.owner = owner;
+        this.visibility = visibility;
+        timestamp = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
     }
 
     public Long getId() {
@@ -63,11 +68,19 @@ public class NewsPost {
         this.owner = owner;
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
     }
 }
