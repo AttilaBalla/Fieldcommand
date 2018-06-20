@@ -3,10 +3,12 @@ package com.fieldcommand.controller;
 import com.fieldcommand.newsfeed.NewsPostService;
 import com.fieldcommand.payload.newsfeed.NewsPostJson;
 import com.fieldcommand.user.UserPrincipal;
+import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +40,12 @@ public class NewsController {
 
         this.logger.info("post: {}, id: {}",newsPost.toString(), userId);
 
+    }
 
+    @GetMapping(value = "/api/dev/getNewsPosts")
+    public String getNewsPosts() {
+        System.out.println("hey I have been called!");
+        return JsonUtil.toJson(newspostService.findAll());
     }
 
 }

@@ -6,6 +6,10 @@ import com.fieldcommand.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 @Service
 public class NewsPostService {
 
@@ -26,4 +30,25 @@ public class NewsPostService {
 
     }
 
+    public List<HashMap<String, String>> findAll() {
+        List<NewsPost> newsPosts = newspostRepository.findAll();
+        List<HashMap<String, String>> newsPostData = new ArrayList<>();
+
+        for (NewsPost newsPost: newsPosts) {
+            newsPostData.add(makeNewsPostHashMap(newsPost));
+        }
+
+        return newsPostData;
+    }
+
+    private HashMap<String, String> makeNewsPostHashMap(NewsPost newsPost) {
+        HashMap<String, String> newsPostHashMap = new HashMap<>();
+
+        newsPostHashMap.put("id", newsPost.getId().toString());
+        newsPostHashMap.put("title", newsPost.getTitle());
+        newsPostHashMap.put("content", newsPost.getContent());
+        newsPostHashMap.put("visible", (newsPost.isVisibility()) ? "True" : "False");
+
+        return newsPostHashMap;
+    }
 }
