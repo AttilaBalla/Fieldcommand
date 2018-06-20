@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,14 +19,20 @@ public class InternalController {
 
     private static final Logger logger = LoggerFactory.getLogger(InternalController.class);
 
-    @Autowired
-    InternalRequestService irs;
+    private final InternalRequestService irs;
 
-    @PostMapping(value = "/internal/request")
+    @Autowired
+    public InternalController(InternalRequestService irs) {
+        this.irs = irs;
+    }
+
+    //TODO : You shouldn't let unauthorized users make internal requests.
+
+    @PostMapping(value = "/api/user/ir/create")
     public ResponseEntity<?> internalRequest(@RequestBody RequestModel internalRequest) {
-        logger.info("Internal request catched");
+        logger.info("Internal request create request");
         try {
-            irs.save(internalRequest);
+            this.irs.save(internalRequest);
             logger.info("Internal request saved to the database");
         } catch (ConstraintViolationException e) {
             if (internalRequest.getMessage().equals("")) {
@@ -37,5 +44,21 @@ public class InternalController {
             }
         }
         return ResponseEntity.ok(new GenericResponseJson(true));
+    }
+
+    @PostMapping(value = "/api/user/ir/update/{id}")
+    public ResponseEntity<?> internalRequestUpdate(@RequestBody RequestModel update, @PathVariable Long id) {
+        logger.info("Internal request update");
+        this.irs.update(update, id);
+        logger.info("internal request updated");
+        return ResponseEntity.status(200).body(new GenericResponseJson(true));
+    }
+
+    @PostMapping(value = "/api/user/ir/delete/{id}")
+    public ResponseEntity<?> internalRequestDelete(@PathVariable Long id) {
+        logger.info("Internal request delete request");
+        this.irs.delete(id);
+        logger.info("Internal request deleted");
+        return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }
 }
