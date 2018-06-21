@@ -27,13 +27,13 @@ public class NewsPost {
 
     NewsPost() {}
 
-    NewsPost(String title, String content, User owner, boolean visibility) {
+    public NewsPost(String title, String content, User owner, boolean visibility) {
 
         this.title = title;
         this.content = content;
         this.owner = owner;
         this.visibility = visibility;
-        timestamp = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss").format(new Date());
+        timestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date());
     }
 
     public Long getId() {
@@ -44,7 +44,7 @@ public class NewsPost {
         this.id = id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -52,7 +52,7 @@ public class NewsPost {
         this.title = title;
     }
 
-    public String getContent() {
+    String getContent() {
         return content;
     }
 
@@ -68,7 +68,7 @@ public class NewsPost {
         this.owner = owner;
     }
 
-    public String getTimestamp() {
+    String getTimestamp() {
         return timestamp;
     }
 
@@ -76,7 +76,7 @@ public class NewsPost {
         this.timestamp = timestamp;
     }
 
-    public boolean isVisibility() {
+    boolean isVisibility() {
         return visibility;
     }
 
