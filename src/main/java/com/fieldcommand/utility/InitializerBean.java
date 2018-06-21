@@ -62,7 +62,7 @@ public class InitializerBean {
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
 
-        ownerUser = new User("user@email4.com", "XAttus", owner);
+        ownerUser = new User("xattus@gmail.com", "XAttus", owner);
         ownerUser.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
         users.add(ownerUser);
 
@@ -75,7 +75,7 @@ public class InitializerBean {
                 "Some sample post",
                 "with this awesome content yo",
                 ownerUser,
-                false
+                true
         ));
     }
 }
