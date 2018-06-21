@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface NewsPostRepository extends CrudRepository<NewsPost, Long> {
 
-    List<NewsPost> findAll();
+    List<NewsPost> findAllByOrderByIdDesc();
 }

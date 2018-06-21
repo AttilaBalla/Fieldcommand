@@ -31,7 +31,7 @@ public class NewsPostService {
     }
 
     public List<HashMap<String, String>> findAll() {
-        List<NewsPost> newsPosts = newspostRepository.findAll();
+        List<NewsPost> newsPosts = newspostRepository.findAllByOrderByIdDesc();
         List<HashMap<String, String>> newsPostData = new ArrayList<>();
 
         for (NewsPost newsPost: newsPosts) {
