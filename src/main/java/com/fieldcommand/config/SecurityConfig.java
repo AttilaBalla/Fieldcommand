@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/swrStatus").permitAll()
+                .antMatchers("/api/getNewsPosts").permitAll()
                 .antMatchers("/api/dev/addNewsPost").hasAuthority("AUTHORITY_NEWS_CREATE")
                 .antMatchers("/api/admin/**").hasAuthority("AUTHORITY_ADMIN")
                 .anyRequest()
