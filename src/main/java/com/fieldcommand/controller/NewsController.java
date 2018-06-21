@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 public class NewsController {
@@ -44,8 +42,14 @@ public class NewsController {
 
     @GetMapping(value = "/api/dev/getNewsPosts")
     public String getNewsPosts() {
-        System.out.println("hey I have been called!");
+
         return JsonUtil.toJson(newspostService.findAll());
+    }
+
+    @GetMapping(value = "/api/dev/getNewsPosts/{id}")
+    public String getNewsPosts(@PathVariable("id")long id) {
+
+        return JsonUtil.toJson(newspostService.findNewsPost(id));
     }
 
 }

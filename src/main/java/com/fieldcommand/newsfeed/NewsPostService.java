@@ -41,11 +41,19 @@ public class NewsPostService {
         return newsPostData;
     }
 
+    public HashMap<String, String> findNewsPost(long id) {
+
+        NewsPost newsPost = newspostRepository.findOne(id);
+
+        return makeNewsPostHashMap(newsPost);
+    }
+
     private HashMap<String, String> makeNewsPostHashMap(NewsPost newsPost) {
         HashMap<String, String> newsPostHashMap = new HashMap<>();
 
         newsPostHashMap.put("id", newsPost.getId().toString());
         newsPostHashMap.put("title", newsPost.getTitle());
+        newsPostHashMap.put("content", newsPost.getContent());
         newsPostHashMap.put("owner", newsPost.getOwner().getUsername());
         newsPostHashMap.put("date", newsPost.getTimestamp());
         newsPostHashMap.put("visible", (newsPost.isVisibility()) ? "True" : "False");
