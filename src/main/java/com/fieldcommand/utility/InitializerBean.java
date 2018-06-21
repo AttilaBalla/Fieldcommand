@@ -1,5 +1,7 @@
 package com.fieldcommand.utility;
 
+import com.fieldcommand.newsfeed.NewsPost;
+import com.fieldcommand.newsfeed.NewsPostRepository;
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
@@ -17,13 +19,20 @@ public class InitializerBean {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private NewsPostRepository newsPostRepository;
+
+    private static User ownerUser;
 
     @Autowired
-    public InitializerBean(RoleRepository roleRepository, UserRepository userRepository) {
+    public InitializerBean(RoleRepository roleRepository,
+                           UserRepository userRepository,
+                           NewsPostRepository newsPostRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.newsPostRepository = newsPostRepository;
         initializeRoles();
         initializeUsers();
+        initializeNews();
     }
 
     private void initializeRoles() {
@@ -53,10 +62,20 @@ public class InitializerBean {
         users.add(new User("user@email2.com", "user2", user, generateKey()));
         users.add(new User("user@email3.com", "user3", newUser, generateKey()));
 
-        User xattus = new User("user@email4.com", "XAttus", owner);
-        xattus.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
-        users.add(xattus);
+        ownerUser = new User("user@email4.com", "XAttus", owner);
+        ownerUser.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
+        users.add(ownerUser);
 
         userRepository.save(users);
+    }
+
+    private void initializeNews() {
+
+        newsPostRepository.save(new NewsPost(
+                "Some sample post",
+                "with this awesome content yo",
+                ownerUser,
+                false
+        ));
     }
 }
