@@ -46,7 +46,8 @@ public class NewsPostService {
 
         newsPostHashMap.put("id", newsPost.getId().toString());
         newsPostHashMap.put("title", newsPost.getTitle());
-        newsPostHashMap.put("content", newsPost.getContent());
+        newsPostHashMap.put("owner", newsPost.getOwner().getUsername());
+        newsPostHashMap.put("date", newsPost.getTimestamp());
         newsPostHashMap.put("visible", (newsPost.isVisibility()) ? "True" : "False");
 
         return newsPostHashMap;
