@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class NewsPostJson {
 
+    private long Id;
+
     @NotBlank
     private String title;
 
@@ -11,6 +13,14 @@ public class NewsPostJson {
     private String content;
 
     private boolean visible;
+
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -38,6 +48,6 @@ public class NewsPostJson {
 
     @Override
     public String toString() {
-        return "title: " + title + " content: " + content + " visible: " + visible;
+        return "id: " + Id + "title: " + title + " content: " + content + " visible: " + visible;
     }
 }

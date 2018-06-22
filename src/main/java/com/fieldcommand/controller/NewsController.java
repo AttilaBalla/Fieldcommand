@@ -3,7 +3,10 @@ package com.fieldcommand.controller;
 import com.fieldcommand.newsfeed.NewsPostService;
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.payload.newsfeed.NewsPostJson;
+import com.fieldcommand.payload.user.UpdateJson;
 import com.fieldcommand.user.UserPrincipal;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
+import com.fieldcommand.utility.Exception.UserNotFoundException;
 import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,10 +53,30 @@ public class NewsController {
         return JsonUtil.toJson(newspostService.findAll());
     }
 
-    @GetMapping(value = "/api/dev/getNewsPosts/{id}")
+    @GetMapping(value = "/api/getNewsPosts/{id}")
     public String getNewsPosts(@PathVariable("id")long id) {
 
         return JsonUtil.toJson(newspostService.findNewsPost(id));
+    }
+
+    @PostMapping("/api/dev/updateNewsPost")
+    public ResponseEntity<?> updateNewsPost(@RequestBody NewsPostJson newsPostJson, Authentication authentication) {
+
+        GenericResponseJson response = new GenericResponseJson();
+        try {
+            newspostService.updateNewsPost(newsPostJson, authentication.getName());
+
+        } catch (IllegalArgumentException | UnauthorizedModificationException | UserNotFoundException ex) {
+
+            response.setSuccess(false);
+            response.setInformation(ex.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        }
+
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
     }
 
 }

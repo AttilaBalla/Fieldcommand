@@ -72,8 +72,8 @@ public class InitializerBean {
     private void initializeNews() {
 
         newsPostRepository.save(new NewsPost(
-                "Some sample post",
-                "with this awesome content yo",
+                "And this cool one comes from the DB",
+                "with this awesome content that also comes from the DB :)",
                 ownerUser,
                 true
         ));
