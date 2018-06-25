@@ -2,6 +2,7 @@ package com.fieldcommand.user;
 
 import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.role.Role;
+
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,7 +65,7 @@ public class User {
         return userData;
     }
 
-    Long getId() {
+    public Long getId() {
         return id;
     }
 
