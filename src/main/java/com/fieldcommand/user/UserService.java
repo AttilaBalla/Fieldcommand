@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-        public List<HashMap<String, String>> findAll() {
+    public List<HashMap<String, String>> findAll() {
         List<User> users = userRepository.findAll();
         List<HashMap<String, String>> userData = new ArrayList<>();
 

@@ -1,8 +1,11 @@
 package com.fieldcommand.user;
 
+import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.role.Role;
 import javax.persistence.*;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +26,9 @@ public class User {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     private Role role;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
+    private Set<NewsPost> newsPosts = new HashSet<>();
 
     private String activationKey;
 

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ApiController {
+public class SwrController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
