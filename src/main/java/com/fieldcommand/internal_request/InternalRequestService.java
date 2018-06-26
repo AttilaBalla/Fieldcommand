@@ -1,19 +1,24 @@
 package com.fieldcommand.internal_request;
 
+import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class InternalRequestService {
 
-    private InternalRequestRepository irr;
+    private InternalRequestRepository internalRequestRepository;
     private UserRepository userRepository;
 
     public InternalRequestService(InternalRequestRepository irr, UserRepository userRepository) {
-        this.irr = irr;
+        this.internalRequestRepository = irr;
         this.userRepository = userRepository;
     }
 
@@ -21,17 +26,58 @@ public class InternalRequestService {
         User author = userRepository.findUserById(userId);
         model.setUserId(author.getId());
         model.setStatus(InternalRequestStatus.NEW);
-        this.irr.save(model);
+        this.internalRequestRepository.save(model);
     }
 
-    public void delete(Long id) {
-        this.irr.delete(id);
+    public void delete(Long id, Long userId) throws UnauthorizedModificationException {
+        if (userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_OWNER) ||
+                userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_ADMIN) ||
+                userId.equals(internalRequestRepository.findOne(id).getUserId())) {
+            this.internalRequestRepository.delete(id);
+        } else {
+            throw new UnauthorizedModificationException("You have no permission to modify this post.");
+        }
     }
 
-    public void update(RequestModel newModel, Long updatableId) {
-        RequestModel oldModel = this.irr.findOne(updatableId);
-        oldModel.setTitle(newModel.getTitle());
-        oldModel.setContent(newModel.getContent());
-        this.irr.save(oldModel);
+    public void update(RequestModel newModel, String updaterName) throws UnauthorizedModificationException {
+        User updater = userRepository.findUserByUsername(updaterName);
+        RequestModel updateModel = internalRequestRepository.findOne(newModel.getId());
+
+        if (updater != userRepository.findUserById(updateModel.getUserId())) {
+            throw new UnauthorizedModificationException("You are not the author of this post.");
+        }
+        updateModel.setTitle(newModel.getTitle());
+        updateModel.setContent(newModel.getContent());
+        this.internalRequestRepository.save(updateModel);
+    }
+
+    public List<HashMap<String, String>> findAll() {
+        List<RequestModel> internalRequests = internalRequestRepository.findAllByOrderByIdDesc();
+        List<HashMap<String, String>> internalRequestData = new ArrayList<>();
+
+        for (RequestModel internalRequest : internalRequests) {
+            internalRequestData.add(makeInternalRequestHashMap(internalRequest));
+        }
+        System.out.println(internalRequestData);
+        return internalRequestData;
+    }
+
+
+    private HashMap<String, String> makeInternalRequestHashMap(RequestModel internalRequest) {
+        HashMap<String, String> internalRequestHashMap = new HashMap<>();
+
+        internalRequestHashMap.put("id", internalRequest.getId().toString());
+        internalRequestHashMap.put("title", internalRequest.getTitle());
+        internalRequestHashMap.put("content", internalRequest.getContent());
+        internalRequestHashMap.put("owner", userRepository.findUserById(internalRequest.getUserId()).getUsername());
+        internalRequestHashMap.put("date", internalRequest.getDate());
+        internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
+
+        return internalRequestHashMap;
+    }
+
+    public HashMap<String, String> findOne(Long id) {
+        RequestModel ir = internalRequestRepository.findOne(id);
+        return makeInternalRequestHashMap(ir);
     }
 }
