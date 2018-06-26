@@ -84,7 +84,7 @@ public class User {
         return role.toString();
     }
 
-    Role getRole() {
+    public Role getRole() {
         return role;
     }
 

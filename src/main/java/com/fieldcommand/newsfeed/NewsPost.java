@@ -21,6 +21,8 @@ public class NewsPost {
 
     private boolean visibility;
 
+    private boolean deleted = false;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     private User owner;
 
@@ -83,5 +85,13 @@ public class NewsPost {
 
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
