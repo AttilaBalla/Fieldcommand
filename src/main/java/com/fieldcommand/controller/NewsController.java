@@ -11,6 +11,7 @@ import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -55,9 +56,15 @@ public class NewsController {
     }
 
     @GetMapping(value = "/api/getNewsPosts/{id}")
-    public String getNewsPosts(@PathVariable("id")long id) {
+    public ResponseEntity<?> getNewsPost(@PathVariable("id")long id) {
+        try {
 
-        return JsonUtil.toJson(newspostService.findNewsPost(id));
+            return ResponseEntity.status(200).body(JsonUtil.toJson(newspostService.findNewsPost(id)));
+
+        } catch(NoSuchElementException ex) {
+
+            return ResponseEntity.status(404).body(new GenericResponseJson(false));
+        }
     }
 
     @PostMapping("/api/dev/updateNewsPost")

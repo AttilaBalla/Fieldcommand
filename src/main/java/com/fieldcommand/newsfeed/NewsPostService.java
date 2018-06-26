@@ -49,9 +49,13 @@ public class NewsPostService {
         return newsPostData;
     }
 
-    public HashMap<String, String> findNewsPost(long id) {
+    public HashMap<String, String> findNewsPost(long id) throws NoSuchElementException {
 
         NewsPost newsPost = newspostRepository.findOne(id);
+
+        if(newsPost == null || newsPost.isDeleted() ) {
+            throw new NoSuchElementException();
+        }
 
         return makeNewsPostHashMap(newsPost);
     }
