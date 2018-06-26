@@ -1,18 +1,20 @@
 package com.fieldcommand.newsfeed;
 
 import com.fieldcommand.payload.newsfeed.NewsPostJson;
+import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
-import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class NewsPostService {
@@ -37,7 +39,7 @@ public class NewsPostService {
     }
 
     public List<HashMap<String, String>> findAll() {
-        List<NewsPost> newsPosts = newspostRepository.findAllByOrderByIdDesc();
+        List<NewsPost> newsPosts = newspostRepository.findAllByDeletedFalseOrderByIdDesc();
         List<HashMap<String, String>> newsPostData = new ArrayList<>();
 
         for (NewsPost newsPost: newsPosts) {
@@ -67,16 +69,46 @@ public class NewsPostService {
         return newsPostHashMap;
     }
 
-    public void updateNewsPost(NewsPostJson newsPostJson, String UpdaterName)
-            throws UserNotFoundException, IllegalArgumentException, UnauthorizedModificationException {
+    public void updateNewsPost(NewsPostJson newsPostJson, Authentication authentication)
+            throws UnauthorizedModificationException {
 
-        logger.info(newsPostJson.toString());
+        User updater = userRepository.findUserByUsername(authentication.getName());
 
         NewsPost newsPost = newspostRepository.findOne(newsPostJson.getId());
+
+        if(newsPost == null) {
+            throw new NoSuchElementException();
+        }
+
+        if(updater.getRole().getRoleType() == RoleType.ROLE_DEVELOPER &&
+                !newsPost.getOwner().getUsername().equals(updater.getUsername())) {
+            throw new UnauthorizedModificationException("You are not allowed to edit this post!");
+        }
 
         newsPost.setTitle(newsPostJson.getTitle());
         newsPost.setContent(newsPostJson.getContent());
         newsPost.setVisibility(newsPostJson.isVisible());
+
+        newspostRepository.save(newsPost);
+
+    }
+
+    public void deletePost(long id, Authentication authentication) throws UnauthorizedModificationException {
+
+        User updater = userRepository.findUserByUsername(authentication.getName());
+
+        NewsPost newsPost = newspostRepository.findOne(id);
+
+        if(newsPost == null) {
+            throw new NoSuchElementException();
+        }
+
+        if(updater.getRole().getRoleType() == RoleType.ROLE_DEVELOPER &&
+                !newsPost.getOwner().getUsername().equals(updater.getUsername())) {
+            throw new UnauthorizedModificationException("You are not allowed to delete this post!");
+        }
+
+        newsPost.setDeleted(true);
 
         newspostRepository.save(newsPost);
 

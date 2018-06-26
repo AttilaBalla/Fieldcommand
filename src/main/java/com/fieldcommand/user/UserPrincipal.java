@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class UserPrincipal implements UserDetails{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

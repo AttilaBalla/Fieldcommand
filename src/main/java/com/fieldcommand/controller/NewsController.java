@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @RestController
 public class NewsController {
@@ -64,9 +65,9 @@ public class NewsController {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
-            newspostService.updateNewsPost(newsPostJson, authentication.getName());
+            newspostService.updateNewsPost(newsPostJson, authentication);
 
-        } catch (IllegalArgumentException | UnauthorizedModificationException | UserNotFoundException ex) {
+        } catch (NoSuchElementException | UnauthorizedModificationException ex) {
 
             response.setSuccess(false);
             response.setInformation(ex.getMessage());
@@ -77,6 +78,28 @@ public class NewsController {
         response.setSuccess(true);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/api/dev/deleteNewsPost/{id}")
+    public ResponseEntity<?> deleteNewsPost(@PathVariable("id")long id, Authentication authentication) {
+
+        GenericResponseJson response = new GenericResponseJson();
+
+        try {
+            newspostService.deletePost(id, authentication);
+
+        } catch (NoSuchElementException | UnauthorizedModificationException ex) {
+
+            response.setSuccess(false);
+            response.setInformation(ex.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        }
+
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+
     }
 
 }
