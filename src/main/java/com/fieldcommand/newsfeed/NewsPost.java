@@ -16,7 +16,7 @@ public class NewsPost {
 
     private String title;
 
-    @Column(length = 15000)
+    @Column(length = 150000)
     private String content;
 
     private boolean visibility;
