@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
+
 import javax.management.relation.RoleNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -139,7 +141,8 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUser(UpdateJson updateJson, String updaterName)
-            throws UserNotFoundException, IllegalArgumentException, UnauthorizedModificationException {
+            throws UserNotFoundException, IllegalArgumentException,
+            UnauthorizedModificationException, TransactionSystemException {
 
         Long userId = updateJson.getId();
         String roleString = updateJson.getRole();
