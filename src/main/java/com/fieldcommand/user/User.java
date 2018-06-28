@@ -2,6 +2,8 @@ package com.fieldcommand.user;
 
 import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.role.Role;
+import org.hibernate.validator.constraints.NotBlank;
+
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -17,12 +19,14 @@ public class User {
     private Long id;
 
     @Column(unique=true)
+    @NotBlank
     private String username;
 
     @Column
     private String password;
 
     @Column(unique=true, nullable=false)
+    @NotBlank
     private String email;
 
     @ManyToOne(cascade = CascadeType.MERGE)

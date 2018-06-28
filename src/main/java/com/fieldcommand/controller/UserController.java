@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.relation.RoleNotFoundException;
@@ -91,6 +92,12 @@ public class UserController {
 
             response.setSuccess(false);
             response.setInformation(ex.getMessage());
+            return ResponseEntity.badRequest().body(response);
+
+        } catch (TransactionSystemException ex) {
+
+            response.setSuccess(false);
+            response.setInformation("The fields cannot be empty!");
             return ResponseEntity.badRequest().body(response);
 
         }
