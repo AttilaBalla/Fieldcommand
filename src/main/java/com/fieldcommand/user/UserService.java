@@ -177,14 +177,13 @@ public class UserService implements UserDetailsService {
 
     private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {
 
-        if(user.getRole().getRoleType() == RoleType.ROLE_OWNER &&
+        if (user.getRole().getRoleType() == RoleType.ROLE_OWNER &&
                 role.getRoleType() != RoleType.ROLE_OWNER) {
             return false; // owner cannot demote himself but can change other fields
         }
 
-        if(user == updater) { // user is updating it's own stuff
-            return true;
-        } else return updater.getRole().getPower() > user.getRole().getPower();
+        // user is updating it's own stuff
+        return user == updater || updater.getRole().getPower() > user.getRole().getPower();
 
     }
 
