@@ -1,5 +1,7 @@
 package com.fieldcommand.internal_request;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
@@ -15,10 +17,10 @@ public class RequestModel {
     @NotNull
     private Long userId;
 
-    @NotNull
+    @NotBlank
     private String title;
 
-    @NotNull
+    @NotBlank
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -26,7 +28,15 @@ public class RequestModel {
 
     private String date = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date());
 
+    RequestModel(Long userId, String title, String content) {
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.status = InternalRequestStatus.NEW;
+    }
+
     RequestModel() {
+
     }
 
     public Long getId() {

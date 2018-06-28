@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
@@ -27,23 +28,16 @@ public class InternalController {
         this.irs = irs;
     }
 
-    //TODO : You shouldn't let unauthorized users make internal requests.
-
     @PostMapping(value = "/api/user/ir/create")
     public ResponseEntity<?> internalRequest(@RequestBody RequestModel internalRequest, Authentication authentication) {
-        System.out.println(internalRequest.toString());
-        logger.info("Internal request create request");
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             Long userId = userPrincipal.getId();
             this.irs.save(internalRequest, userId);
-            logger.info("Internal request saved to the database");
-        } catch (ConstraintViolationException e) {
+        } catch (TransactionSystemException e) {
             if (internalRequest.getContent().equals("")) {
-                logger.error("Internal request cannot be saved with an empty message");
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "You should write a message"));
             } else {
-                logger.error("Internal request cannot be saved without author");
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "Servers down, sorry"));
             }
         }
@@ -79,7 +73,6 @@ public class InternalController {
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")
     public ResponseEntity<?> internalRequestDelete(@PathVariable Long id, Authentication authentication) {
-        logger.info("Internal request delete request");
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Long userId = userPrincipal.getId();
         try {
@@ -87,7 +80,6 @@ public class InternalController {
         } catch (UnauthorizedModificationException e) {
             ResponseEntity.status(403).body(e.getMessage());
         }
-        logger.info("Internal request deleted");
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }
 }

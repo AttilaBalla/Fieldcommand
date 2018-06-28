@@ -4,7 +4,9 @@ import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -17,12 +19,14 @@ public class InternalRequestService {
     private InternalRequestRepository internalRequestRepository;
     private UserRepository userRepository;
 
+    @Autowired
     public InternalRequestService(InternalRequestRepository irr, UserRepository userRepository) {
         this.internalRequestRepository = irr;
         this.userRepository = userRepository;
     }
 
-    public void save(RequestModel model, Long userId) throws ConstraintViolationException {
+    public void save(RequestModel model, Long userId) throws TransactionSystemException {
+        System.out.println(model.toString());
         User author = userRepository.findUserById(userId);
         model.setUserId(author.getId());
         model.setStatus(InternalRequestStatus.NEW);
