@@ -1,9 +1,8 @@
 package com.fieldcommand.internal_request;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,21 +17,26 @@ public class RequestModel {
     @NotNull
     private Long userId;
 
-    @NotNull
+    @NotBlank
     private String title;
 
-    @NotNull
-    private String message;
+    @NotBlank
+    private String content;
+
+    @Enumerated(EnumType.STRING)
+    private InternalRequestStatus status;
 
     private String date = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date());
 
-    RequestModel() {
-    }
-
-    RequestModel(Long userId, String title, String message) {
+    RequestModel(Long userId, String title, String content) {
         this.userId = userId;
         this.title = title;
-        this.message = message;
+        this.content = content;
+        this.status = InternalRequestStatus.NEW;
+    }
+
+    RequestModel() {
+
     }
 
     public Long getId() {
@@ -43,16 +47,24 @@ public class RequestModel {
         return userId;
     }
 
+    void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     String getTitle() {
         return title;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    void setContent(String content) {
+        this.content = content;
     }
 
     String getDate() {
@@ -63,8 +75,12 @@ public class RequestModel {
         this.date = newDate;
     }
 
-    void setMessage(String message) {
-        this.message = message;
+    public InternalRequestStatus getStatus() {
+        return status;
+    }
+
+    void setStatus(InternalRequestStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -73,9 +89,8 @@ public class RequestModel {
                 "id=" + id +
                 ", userId=" + userId +
                 ", title='" + title + '\'' +
-                ", message='" + message + '\'' +
+                ", content='" + content + '\'' +
                 ", date='" + date + '\'' +
                 '}';
     }
-
 }

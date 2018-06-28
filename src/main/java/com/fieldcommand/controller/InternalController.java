@@ -3,14 +3,16 @@ package com.fieldcommand.controller;
 import com.fieldcommand.internal_request.InternalRequestService;
 import com.fieldcommand.internal_request.RequestModel;
 import com.fieldcommand.payload.GenericResponseJson;
+import com.fieldcommand.user.UserPrincipal;
+import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
+import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 
@@ -26,39 +28,58 @@ public class InternalController {
         this.irs = irs;
     }
 
-    //TODO : You shouldn't let unauthorized users make internal requests.
-
     @PostMapping(value = "/api/user/ir/create")
-    public ResponseEntity<?> internalRequest(@RequestBody RequestModel internalRequest) {
-        logger.info("Internal request create request");
+    public ResponseEntity<?> internalRequest(@RequestBody RequestModel internalRequest, Authentication authentication) {
         try {
-            this.irs.save(internalRequest);
-            logger.info("Internal request saved to the database");
-        } catch (ConstraintViolationException e) {
-            if (internalRequest.getMessage().equals("")) {
-                logger.error("Internal request cannot be saved with an empty message");
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            Long userId = userPrincipal.getId();
+            this.irs.save(internalRequest, userId);
+        } catch (TransactionSystemException e) {
+            if (internalRequest.getContent().equals("")) {
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "You should write a message"));
             } else {
-                logger.error("Internal request cannot be saved without author");
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "Servers down, sorry"));
             }
         }
         return ResponseEntity.ok(new GenericResponseJson(true));
     }
 
-    @PostMapping(value = "/api/user/ir/update/{id}")
-    public ResponseEntity<?> internalRequestUpdate(@RequestBody RequestModel update, @PathVariable Long id) {
-        logger.info("Internal request update");
-        this.irs.update(update, id);
-        logger.info("internal request updated");
-        return ResponseEntity.status(200).body(new GenericResponseJson(true));
+    @GetMapping(value = "/api/user/ir/get")
+    public String getInternalRequests() {
+        return JsonUtil.toJson(irs.findAll());
     }
 
-    @PostMapping(value = "/api/user/ir/delete/{id}")
-    public ResponseEntity<?> internalRequestDelete(@PathVariable Long id) {
-        logger.info("Internal request delete request");
-        this.irs.delete(id);
-        logger.info("Internal request deleted");
+    @GetMapping(value = "/api/user/ir/get/{id}")
+    public String getInternalRequest(@PathVariable Long id) {
+        return JsonUtil.toJson(irs.findOne(id));
+    }
+
+    @PostMapping("/api/user/ir/update")
+    public ResponseEntity<?> updateInternalRequest(@RequestBody RequestModel update, Authentication authentication) {
+
+        GenericResponseJson response = new GenericResponseJson();
+        try {
+            irs.update(update, authentication.getName());
+
+        } catch (UnauthorizedModificationException e) {
+            e.printStackTrace();
+        }
+
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping(value = "/api/user/ir/delete/{id}")
+    public ResponseEntity<?> internalRequestDelete(@PathVariable Long id, Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Long userId = userPrincipal.getId();
+        try {
+            this.irs.delete(id, userId);
+        } catch (UnauthorizedModificationException e) {
+            ResponseEntity.status(403).body(e.getMessage());
+        }
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }
 }
