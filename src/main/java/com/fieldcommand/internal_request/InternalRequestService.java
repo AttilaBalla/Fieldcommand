@@ -20,20 +20,23 @@ public class InternalRequestService {
     private UserRepository userRepository;
 
     @Autowired
-    public InternalRequestService(InternalRequestRepository irr, UserRepository userRepository) {
-        this.internalRequestRepository = irr;
+    public InternalRequestService(InternalRequestRepository internalRequestRepository, UserRepository userRepository) {
+        this.internalRequestRepository = internalRequestRepository;
         this.userRepository = userRepository;
     }
 
     public void save(RequestModel model, Long userId) throws TransactionSystemException {
-        System.out.println(model.toString());
+
         User author = userRepository.findUserById(userId);
+
         model.setUserId(author.getId());
         model.setStatus(InternalRequestStatus.NEW);
+
         this.internalRequestRepository.save(model);
     }
 
     public void delete(Long id, Long userId) throws UnauthorizedModificationException {
+
         if (userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_OWNER) ||
                 userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_ADMIN) ||
                 userId.equals(internalRequestRepository.findOne(id).getUserId())) {
@@ -44,7 +47,9 @@ public class InternalRequestService {
     }
 
     public void update(RequestModel newModel, String updaterName) throws UnauthorizedModificationException {
+
         User updater = userRepository.findUserByUsername(updaterName);
+
         RequestModel updateModel = internalRequestRepository.findOne(newModel.getId());
 
         if (updater != userRepository.findUserById(updateModel.getUserId())) {
@@ -52,6 +57,7 @@ public class InternalRequestService {
         }
         updateModel.setTitle(newModel.getTitle());
         updateModel.setContent(newModel.getContent());
+
         this.internalRequestRepository.save(updateModel);
     }
 
@@ -62,7 +68,7 @@ public class InternalRequestService {
         for (RequestModel internalRequest : internalRequests) {
             internalRequestData.add(makeInternalRequestHashMap(internalRequest));
         }
-        System.out.println(internalRequestData);
+
         return internalRequestData;
     }
 
@@ -82,6 +88,7 @@ public class InternalRequestService {
 
     public HashMap<String, String> findOne(Long id) {
         RequestModel ir = internalRequestRepository.findOne(id);
+
         return makeInternalRequestHashMap(ir);
     }
 }
