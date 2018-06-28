@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("RequestModel")
+@Repository
 interface InternalRequestRepository extends CrudRepository<RequestModel, Long> {
 
     List<RequestModel> findAllByOrderByIdDesc();
