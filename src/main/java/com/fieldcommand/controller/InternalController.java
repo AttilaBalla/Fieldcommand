@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
-
 @RestController
 public class InternalController {
 
@@ -59,10 +57,12 @@ public class InternalController {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
-            irs.update(update, authentication.getName());
+            irs.updateIntRequest(update, authentication.getName());
 
-        } catch (UnauthorizedModificationException e) {
-            e.printStackTrace();
+        } catch (UnauthorizedModificationException ex) {
+
+            return ResponseEntity.badRequest().body(new GenericResponseJson(
+                    false, "You are not authorized to update this request."));
         }
 
         response.setSuccess(true);

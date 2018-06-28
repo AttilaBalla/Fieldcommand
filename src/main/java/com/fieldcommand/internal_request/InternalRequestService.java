@@ -46,7 +46,7 @@ public class InternalRequestService {
         }
     }
 
-    public void update(RequestModel newModel, String updaterName) throws UnauthorizedModificationException {
+    public void updateIntRequest(RequestModel newModel, String updaterName) throws UnauthorizedModificationException {
 
         User updater = userRepository.findUserByUsername(updaterName);
 
