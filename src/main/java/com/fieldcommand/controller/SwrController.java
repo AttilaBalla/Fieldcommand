@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,15 +25,23 @@ public class SwrController {
 
     @CrossOrigin
     @GetMapping(value = "/api/swrStatus")
-    public String getSwrStatus() {
+    public ResponseEntity<?> getSwrStatus() {
         try {
 
-            return JsonUtil.toJson(swrNetService.getStatus());
+            return ResponseEntity.ok(JsonUtil.toJson(swrNetService.getStatus()));
         }
         catch (JSONException ex) {
-            logger.warn("Error occured when retrieving SWR.net status: {}", ex.getMessage());
+            logger.warn("Error occured when retrieving SWR.net status for frontend: {}", ex.getMessage());
 
-            return JsonUtil.toJson(new GenericResponseJson(false, "JSON error occured."));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(JsonUtil.toJson(new GenericResponseJson(false, "JSON error occured when retrieving SWR.net status.")));
+        }
+
+        catch(NullPointerException ex) {
+            logger.warn("Error occured when retrieving SWR.net status for frontend: Status object is null.");
+
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(JsonUtil.toJson(new GenericResponseJson(false, "The server cannot properly retrieve the status through the API.")));
         }
     }
 

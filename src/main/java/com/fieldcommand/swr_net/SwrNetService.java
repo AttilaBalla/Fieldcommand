@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,12 +26,17 @@ public class SwrNetService {
     private JSONObject status;
 
     @Scheduled(fixedDelay = 60000)
-    public void updateStatus() throws JSONException {
-        status =  JsonUtil.getJson(url);
-        logger.info("Updated SWR.net status -> {}", status);
+    public void updateStatus() {
+
+        try {
+            status = JsonUtil.getJson(url);
+            logger.info("Updated SWR.net status: {}", status);
+        } catch (ResourceAccessException | JSONException ex) {
+            logger.warn("Failed to update SWR.net status: {}", ex.getMessage());
+        }
     }
 
-    public Map getStatus() throws JSONException {
+    public Map getStatus() throws JSONException, NullPointerException {
 
         Map<String, String> status = new HashMap<>();
 
