@@ -1,7 +1,7 @@
 package com.fieldcommand.controller;
 
-import com.fieldcommand.internal_request.InternalRequestService;
-import com.fieldcommand.internal_request.RequestModel;
+import com.fieldcommand.intrequest.InternalRequestService;
+import com.fieldcommand.intrequest.InternalRequest;
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.user.UserPrincipal;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
@@ -27,7 +27,7 @@ public class InternalController {
     }
 
     @PostMapping(value = "/api/user/ir/create")
-    public ResponseEntity<?> internalRequest(@RequestBody RequestModel internalRequest, Authentication authentication) {
+    public ResponseEntity<?> internalRequest(@RequestBody InternalRequest internalRequest, Authentication authentication) {
         try {
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             Long userId = userPrincipal.getId();
@@ -53,7 +53,7 @@ public class InternalController {
     }
 
     @PostMapping("/api/user/ir/update")
-    public ResponseEntity<?> updateInternalRequest(@RequestBody RequestModel update, Authentication authentication) {
+    public ResponseEntity<?> updateInternalRequest(@RequestBody InternalRequest update, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();
         try {

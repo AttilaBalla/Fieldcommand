@@ -1,4 +1,4 @@
-package com.fieldcommand.internal_request;
+package com.fieldcommand.intrequest;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -8,7 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
-public class RequestModel {
+@Table( name = "int_requests" )
+public class InternalRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,21 +22,22 @@ public class RequestModel {
     private String title;
 
     @NotBlank
+    @Column(length = 150000)
     private String content;
 
     @Enumerated(EnumType.STRING)
     private InternalRequestStatus status;
 
-    private String date = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a").format(new Date());
+    private String date = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date());
 
-    RequestModel(Long userId, String title, String content) {
+    InternalRequest(Long userId, String title, String content) {
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.status = InternalRequestStatus.NEW;
+        this.status = InternalRequestStatus.WAITING;
     }
 
-    RequestModel() {
+    InternalRequest() {
 
     }
 
@@ -43,7 +45,7 @@ public class RequestModel {
         return id;
     }
 
-    public Long getUserId() {
+    Long getUserId() {
         return userId;
     }
 
@@ -75,7 +77,7 @@ public class RequestModel {
         this.date = newDate;
     }
 
-    public InternalRequestStatus getStatus() {
+    InternalRequestStatus getStatus() {
         return status;
     }
 
@@ -85,7 +87,7 @@ public class RequestModel {
 
     @Override
     public String toString() {
-        return "RequestModel{" +
+        return "InternalRequest{" +
                 "id=" + id +
                 ", userId=" + userId +
                 ", title='" + title + '\'' +

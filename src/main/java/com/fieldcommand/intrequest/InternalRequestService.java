@@ -1,4 +1,4 @@
-package com.fieldcommand.internal_request;
+package com.fieldcommand.intrequest;
 
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +24,12 @@ public class InternalRequestService {
         this.userRepository = userRepository;
     }
 
-    public void save(RequestModel model, Long userId) throws TransactionSystemException {
+    public void save(InternalRequest model, Long userId) throws TransactionSystemException {
 
         User author = userRepository.findUserById(userId);
 
         model.setUserId(author.getId());
-        model.setStatus(InternalRequestStatus.NEW);
+        model.setStatus(InternalRequestStatus.WAITING);
 
         this.internalRequestRepository.save(model);
     }
@@ -46,11 +45,11 @@ public class InternalRequestService {
         }
     }
 
-    public void updateIntRequest(RequestModel newModel, String updaterName) throws UnauthorizedModificationException {
+    public void updateIntRequest(InternalRequest newModel, String updaterName) throws UnauthorizedModificationException {
 
         User updater = userRepository.findUserByUsername(updaterName);
 
-        RequestModel updateModel = internalRequestRepository.findOne(newModel.getId());
+        InternalRequest updateModel = internalRequestRepository.findOne(newModel.getId());
 
         if (updater != userRepository.findUserById(updateModel.getUserId())) {
             throw new UnauthorizedModificationException("You are not the author of this post.");
@@ -62,10 +61,10 @@ public class InternalRequestService {
     }
 
     public List<HashMap<String, String>> findAll() {
-        List<RequestModel> internalRequests = internalRequestRepository.findAllByOrderByIdDesc();
+        List<InternalRequest> internalRequests = internalRequestRepository.findAllByOrderByIdDesc();
         List<HashMap<String, String>> internalRequestData = new ArrayList<>();
 
-        for (RequestModel internalRequest : internalRequests) {
+        for (InternalRequest internalRequest : internalRequests) {
             internalRequestData.add(makeInternalRequestHashMap(internalRequest));
         }
 
@@ -73,7 +72,7 @@ public class InternalRequestService {
     }
 
 
-    private HashMap<String, String> makeInternalRequestHashMap(RequestModel internalRequest) {
+    private HashMap<String, String> makeInternalRequestHashMap(InternalRequest internalRequest) {
         HashMap<String, String> internalRequestHashMap = new HashMap<>();
 
         internalRequestHashMap.put("id", internalRequest.getId().toString());
@@ -87,7 +86,7 @@ public class InternalRequestService {
     }
 
     public HashMap<String, String> findOne(Long id) {
-        RequestModel ir = internalRequestRepository.findOne(id);
+        InternalRequest ir = internalRequestRepository.findOne(id);
 
         return makeInternalRequestHashMap(ir);
     }
