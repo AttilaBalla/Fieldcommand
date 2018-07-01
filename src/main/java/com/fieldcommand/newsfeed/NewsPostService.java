@@ -43,7 +43,7 @@ public class NewsPostService {
         List<HashMap<String, String>> newsPostData = new ArrayList<>();
 
         for (NewsPost newsPost: newsPosts) {
-            newsPostData.add(makeNewsPostHashMap(newsPost, false));
+            newsPostData.add(makeNewsPostHashMap(newsPost));
         }
 
         return newsPostData;
@@ -57,10 +57,10 @@ public class NewsPostService {
             throw new NoSuchElementException();
         }
 
-        return makeNewsPostHashMap(newsPost, true);
+        return makeNewsPostHashMap(newsPost);
     }
 
-    private HashMap<String, String> makeNewsPostHashMap(NewsPost newsPost, boolean putContent) {
+    private HashMap<String, String> makeNewsPostHashMap(NewsPost newsPost) {
         HashMap<String, String> newsPostHashMap = new HashMap<>();
 
         newsPostHashMap.put("id", newsPost.getId().toString());
@@ -68,10 +68,7 @@ public class NewsPostService {
         newsPostHashMap.put("owner", newsPost.getOwner().getUsername());
         newsPostHashMap.put("date", newsPost.getTimestamp());
         newsPostHashMap.put("visible", (newsPost.isVisibility()) ? "True" : "False");
-
-        if(putContent) {
-            newsPostHashMap.put("content", newsPost.getContent());
-        }
+        newsPostHashMap.put("content", newsPost.getContent());
 
         return newsPostHashMap;
     }
