@@ -2,6 +2,8 @@ package com.fieldcommand.utility;
 
 import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.newsfeed.NewsPostRepository;
+import com.fieldcommand.project.Project;
+import com.fieldcommand.project.ProjectRepository;
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Component;
 import static com.fieldcommand.utility.KeyGenerator.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class InitializerBean {
@@ -20,19 +24,34 @@ public class InitializerBean {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private NewsPostRepository newsPostRepository;
+    private ProjectRepository projectRepository;
 
     private static User ownerUser;
 
     @Autowired
     public InitializerBean(RoleRepository roleRepository,
                            UserRepository userRepository,
-                           NewsPostRepository newsPostRepository) {
+                           NewsPostRepository newsPostRepository,
+                           ProjectRepository projectRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.newsPostRepository = newsPostRepository;
+        this.projectRepository = projectRepository;
+        initializeProjects();
+        initializeNews();
         initializeRoles();
         initializeUsers();
-        initializeNews();
+    }
+
+    private void initializeProjects() {
+        List<Project> projects = new ArrayList<>();
+
+        projects.add(new Project("Rise of the Reds", "ROTR"));
+        projects.add(new Project("SWR.net", "SWRNET"));
+        projects.add(new Project("FieldCommand", "FC"));
+
+        projectRepository.save(projects);
+
     }
 
     private void initializeRoles() {
@@ -53,11 +72,13 @@ public class InitializerBean {
     private void initializeUsers() {
 
         List<User> users = new ArrayList<>();
+        Set<Project> Projects = new HashSet<>();
 
         Role newUser = roleRepository.findByRoleType(RoleType.ROLE_NEW);
         Role user = roleRepository.findByRoleType(RoleType.ROLE_USER);
         Role owner = roleRepository.findByRoleType(RoleType.ROLE_OWNER);
         Role developer = roleRepository.findByRoleType(RoleType.ROLE_DEVELOPER);
+        Projects.add(projectRepository.findByShortName("FC"));
 
         users.add(new User("user@email1.com", "user1", newUser, generateKey()));
         users.add(new User("user@email2.com", "user2", user, generateKey()));
@@ -65,6 +86,7 @@ public class InitializerBean {
 
         ownerUser = new User("xattus@gmail.com", "XAttus", owner);
         ownerUser.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
+        ownerUser.setProjects(Projects);
         users.add(ownerUser);
 
         User dev = new User("developer@developer.com", "DEVELOPAH",developer);

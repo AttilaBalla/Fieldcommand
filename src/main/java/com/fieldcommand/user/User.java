@@ -1,6 +1,7 @@
 package com.fieldcommand.user;
 
 import com.fieldcommand.newsfeed.NewsPost;
+import com.fieldcommand.project.Project;
 import com.fieldcommand.role.Role;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,6 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique=true)
@@ -34,6 +36,14 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
     private Set<NewsPost> newsPosts = new HashSet<>();
+
+    @ManyToMany(cascade = { CascadeType.MERGE })
+    @JoinTable(
+            name = "user_project",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "project_id") }
+    )
+    private Set<Project> projects = new HashSet<>();
 
     private String activationKey;
 
@@ -95,7 +105,6 @@ public class User {
 
     void setRole(Role role) {
         this.role = role;
-
     }
 
     String getPassword() {
@@ -120,6 +129,22 @@ public class User {
 
     void setActivationKey(String key) {
         this.activationKey = key;
+    }
+
+    public Set<NewsPost> getNewsPosts() {
+        return newsPosts;
+    }
+
+    public void setNewsPosts(Set<NewsPost> newsPosts) {
+        this.newsPosts = newsPosts;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     @Override
