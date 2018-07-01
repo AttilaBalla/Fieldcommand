@@ -38,9 +38,9 @@ public class InitializerBean {
         this.newsPostRepository = newsPostRepository;
         this.projectRepository = projectRepository;
         initializeProjects();
-        initializeNews();
         initializeRoles();
         initializeUsers();
+        initializeNews();
     }
 
     private void initializeProjects() {

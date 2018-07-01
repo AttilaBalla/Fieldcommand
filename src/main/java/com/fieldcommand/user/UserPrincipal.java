@@ -36,8 +36,11 @@ public class UserPrincipal implements UserDetails{
 
     private int rolePower;
 
-    private UserPrincipal(Long id, String name, String roleType, int rolePower, String username, String email, String password,
-                         Collection<? extends GrantedAuthority> authorities) {
+    private List<String> projects;
+
+    private UserPrincipal(Long id, String name, String roleType, int rolePower, String username, String email,
+                          String password, List<String> projects,
+                          Collection<? extends GrantedAuthority> authorities) {
 
         this.id = id;
         this.username = username;
@@ -45,6 +48,7 @@ public class UserPrincipal implements UserDetails{
         this.rolePower = rolePower;
         this.email = email;
         this.password = password;
+        this.projects = projects;
         this.authorities = authorities;
         createSimpleAuthList(authorities);
     }
@@ -64,6 +68,7 @@ public class UserPrincipal implements UserDetails{
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getProjectStringList(),
                 authorities
         );
     }
@@ -140,5 +145,13 @@ public class UserPrincipal implements UserDetails{
 
     public void setRolePower(int rolePower) {
         this.rolePower = rolePower;
+    }
+
+    public List<String> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<String> projects) {
+        this.projects = projects;
     }
 }

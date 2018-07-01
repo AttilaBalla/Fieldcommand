@@ -7,9 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -141,6 +139,18 @@ public class User {
 
     public Set<Project> getProjects() {
         return projects;
+    }
+
+    List<String> getProjectStringList() {
+
+        List<String> projectList = new ArrayList<>();
+
+        for (Project project: projects
+             ) {
+            projectList.add(project.getShortName());
+        }
+
+        return projectList;
     }
 
     public void setProjects(Set<Project> projects) {
