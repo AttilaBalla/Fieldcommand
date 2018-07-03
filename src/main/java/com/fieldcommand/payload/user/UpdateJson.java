@@ -9,7 +9,7 @@ public class UpdateJson {
     private String email;
     private Long id;
     private String role;
-    private List<String> versions = new ArrayList<>();
+    private List<String> projects = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -43,12 +43,12 @@ public class UpdateJson {
         this.role = role;
     }
 
-    public List<String> getVersions() {
-        return versions;
+    public List<String> getProjects() {
+        return projects;
     }
 
-    public void setVersions(List<String> versions) {
-        this.versions = versions;
+    public void setProjects(List<String> projects) {
+        this.projects = projects;
     }
 
     @Override
@@ -58,9 +58,9 @@ public class UpdateJson {
                 + "id: " + this.id + "\n"
                 + "role: " + this.role + "\n");
 
-        for (String version: this.versions
+        for (String project: this.projects
              ) {
-            updateJson.append(version).append(", ");
+            updateJson.append(project).append(", ");
         }
         return updateJson.toString();
     }

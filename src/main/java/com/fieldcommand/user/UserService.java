@@ -1,6 +1,8 @@
 package com.fieldcommand.user;
 
 import com.fieldcommand.payload.user.UpdateJson;
+import com.fieldcommand.project.Project;
+import com.fieldcommand.project.ProjectRepository;
 import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.payload.GenericResponseJson;
@@ -33,14 +35,17 @@ public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private ProjectRepository projectRepository;
     private EmailSender emailSender;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
+                       ProjectRepository projectRepository,
                        EmailSender emailSender) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.projectRepository = projectRepository;
         this.emailSender = emailSender;
     }
 
@@ -48,9 +53,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-    public List<HashMap<String, String>> findAll() {
+    public List<HashMap<String, Object>> findAll() {
         List<User> users = userRepository.findAll();
-        List<HashMap<String, String>> userData = new ArrayList<>();
+        List<HashMap<String, Object>> userData = new ArrayList<>();
 
         for (User user: users) {
             userData.add(user.getSimpleUserDetails());
@@ -169,10 +174,27 @@ public class UserService implements UserDetailsService {
             user.setEmail(updateJson.getEmail());
             user.setUsername(updateJson.getUsername());
             user.setRole(role);
+            user.setProjects(makeProjectsSet(updateJson.getProjects()));
 
             userRepository.save(user);
 
         }
+    }
+
+    private Set<Project> makeProjectsSet(List<String> projects) {
+
+        Set<Project> projectsSet = new HashSet<>();
+
+        if(projects.isEmpty()) {
+            return projectsSet;
+        }
+
+        for (String project: projects
+                ) {
+            projectsSet.add(projectRepository.findByShortName(project));
+        }
+
+        return projectsSet;
     }
 
     private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {

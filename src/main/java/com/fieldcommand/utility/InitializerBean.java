@@ -1,5 +1,8 @@
 package com.fieldcommand.utility;
 
+import com.fieldcommand.intrequest.InternalRequest;
+import com.fieldcommand.intrequest.InternalRequestRepository;
+import com.fieldcommand.intrequest.InternalRequestStatus;
 import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.newsfeed.NewsPostRepository;
 import com.fieldcommand.project.Project;
@@ -25,6 +28,7 @@ public class InitializerBean {
     private RoleRepository roleRepository;
     private NewsPostRepository newsPostRepository;
     private ProjectRepository projectRepository;
+    private InternalRequestRepository internalRequestRepository;
 
     private static User ownerUser;
 
@@ -32,15 +36,19 @@ public class InitializerBean {
     public InitializerBean(RoleRepository roleRepository,
                            UserRepository userRepository,
                            NewsPostRepository newsPostRepository,
-                           ProjectRepository projectRepository) {
+                           ProjectRepository projectRepository,
+                           InternalRequestRepository internalRequestRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.newsPostRepository = newsPostRepository;
         this.projectRepository = projectRepository;
+        this.internalRequestRepository = internalRequestRepository;
+
         initializeProjects();
         initializeRoles();
         initializeUsers();
         initializeNews();
+        initializeIntRequests();
     }
 
     private void initializeProjects() {
@@ -104,5 +112,15 @@ public class InitializerBean {
                 ownerUser,
                 true
         ));
+    }
+
+    private void initializeIntRequests() {
+
+        internalRequestRepository.save(new InternalRequest(
+                "Some sample request title",
+                "Content here yo, we need to do dis!",
+                ownerUser,
+                InternalRequestStatus.WAITING));
+
     }
 }

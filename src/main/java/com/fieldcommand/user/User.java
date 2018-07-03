@@ -1,5 +1,6 @@
 package com.fieldcommand.user;
 
+import com.fieldcommand.intrequest.InternalRequest;
 import com.fieldcommand.newsfeed.NewsPost;
 import com.fieldcommand.project.Project;
 import com.fieldcommand.role.Role;
@@ -35,6 +36,9 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
     private Set<NewsPost> newsPosts = new HashSet<>();
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
+    private Set<InternalRequest> internalRequests = new HashSet<>();
+
     @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "user_project",
@@ -66,13 +70,14 @@ public class User {
         this.activationKey = activationKey;
     }
 
-    HashMap<String, String> getSimpleUserDetails() {
-        HashMap<String, String> userData = new HashMap<>();
+    HashMap<String, Object> getSimpleUserDetails() {
+        HashMap<String, Object> userData = new HashMap<>();
         userData.put("id", id.toString());
         userData.put("username", username);
         userData.put("email", email);
         userData.put("role", role.toString());
         userData.put("rolePower", role.getPower().toString());
+        userData.put("projects", getProjectStringList());
 
         return userData;
     }
