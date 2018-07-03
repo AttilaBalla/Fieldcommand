@@ -97,7 +97,7 @@ public class NewsPostService {
 
     }
 
-    public void deletePost(long id, Authentication authentication) throws UnauthorizedModificationException {
+    public void deleteNewsPost(long id, Authentication authentication) throws UnauthorizedModificationException {
 
         User updater = userRepository.findUserByUsername(authentication.getName());
 

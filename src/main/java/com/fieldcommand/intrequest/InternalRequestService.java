@@ -1,10 +1,10 @@
 package com.fieldcommand.intrequest;
 
-import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
@@ -24,24 +24,26 @@ public class InternalRequestService {
         this.userRepository = userRepository;
     }
 
-    public void save(InternalRequest model, Long userId) throws TransactionSystemException {
+    public void save(InternalRequest intRequest, Long userId) throws TransactionSystemException {
 
-        User author = userRepository.findUserById(userId);
+        User owner = userRepository.findUserById(userId);
 
-        model.setUserId(author.getId());
-        model.setStatus(InternalRequestStatus.WAITING);
+        intRequest.setOwner(owner);
+        intRequest.setStatus(InternalRequestStatus.WAITING);
 
-        this.internalRequestRepository.save(model);
+        this.internalRequestRepository.save(intRequest);
     }
 
-    public void delete(Long id, Long userId) throws UnauthorizedModificationException {
+    public void delete(Long id, Authentication authentication) throws UnauthorizedModificationException {
 
-        if (userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_OWNER) ||
-                userRepository.findUserById(userId).getRole().getRoleType().equals(RoleType.ROLE_ADMIN) ||
-                userId.equals(internalRequestRepository.findOne(id).getUserId())) {
+        User deleter = userRepository.findUserByUsername(authentication.getName());
+
+        InternalRequest internalRequest = internalRequestRepository.findOne(id);
+
+        if (internalRequest.getOwner() == deleter) {
             this.internalRequestRepository.delete(id);
         } else {
-            throw new UnauthorizedModificationException("You have no permission to modify this post.");
+            throw new UnauthorizedModificationException("You have no permission to delete this internal request!");
         }
     }
 
@@ -51,7 +53,7 @@ public class InternalRequestService {
 
         InternalRequest updateModel = internalRequestRepository.findOne(newModel.getId());
 
-        if (updater != userRepository.findUserById(updateModel.getUserId())) {
+        if (updater != userRepository.findUserById(updateModel.getOwner().getId())) {
             throw new UnauthorizedModificationException("You are not the author of this post.");
         }
         updateModel.setTitle(newModel.getTitle());
@@ -78,7 +80,7 @@ public class InternalRequestService {
         internalRequestHashMap.put("id", internalRequest.getId().toString());
         internalRequestHashMap.put("title", internalRequest.getTitle());
         internalRequestHashMap.put("content", internalRequest.getContent());
-        internalRequestHashMap.put("owner", userRepository.findUserById(internalRequest.getUserId()).getUsername());
+        internalRequestHashMap.put("owner", internalRequest.getOwner().getUsername());
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
 

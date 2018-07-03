@@ -15,41 +15,47 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class InternalController {
+public class IntRequestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(InternalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IntRequestController.class);
 
-    private final InternalRequestService irs;
+    private final InternalRequestService internalRequestService;
 
     @Autowired
-    public InternalController(InternalRequestService irs) {
-        this.irs = irs;
+    public IntRequestController(InternalRequestService internalRequestService) {
+
+        this.internalRequestService = internalRequestService;
     }
 
     @PostMapping(value = "/api/user/ir/create")
     public ResponseEntity<?> internalRequest(@RequestBody InternalRequest internalRequest, Authentication authentication) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Long userId = userPrincipal.getId();
+
         try {
-            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-            Long userId = userPrincipal.getId();
-            this.irs.save(internalRequest, userId);
+            this.internalRequestService.save(internalRequest, userId);
+
         } catch (TransactionSystemException e) {
+
             if (internalRequest.getContent().equals("")) {
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "You should write a message"));
             } else {
-                return ResponseEntity.status(401).body(new GenericResponseJson(false, "Servers down, sorry"));
+                return ResponseEntity.status(401).body(new GenericResponseJson(false, "Internal server error occurred. Please try again later."));
             }
         }
+
         return ResponseEntity.ok(new GenericResponseJson(true));
     }
 
     @GetMapping(value = "/api/user/ir/get")
     public String getInternalRequests() {
-        return JsonUtil.toJson(irs.findAll());
+        return JsonUtil.toJson(internalRequestService.findAll());
     }
 
     @GetMapping(value = "/api/user/ir/get/{id}")
     public String getInternalRequest(@PathVariable Long id) {
-        return JsonUtil.toJson(irs.findOne(id));
+        return JsonUtil.toJson(internalRequestService.findOne(id));
     }
 
     @PostMapping("/api/user/ir/update")
@@ -57,7 +63,7 @@ public class InternalController {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
-            irs.updateIntRequest(update, authentication.getName());
+            internalRequestService.updateIntRequest(update, authentication.getName());
 
         } catch (UnauthorizedModificationException ex) {
 
@@ -73,10 +79,11 @@ public class InternalController {
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")
     public ResponseEntity<?> internalRequestDelete(@PathVariable Long id, Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Long userId = userPrincipal.getId();
+
         try {
-            this.irs.delete(id, userId);
+
+            this.internalRequestService.delete(id, authentication);
+
         } catch (UnauthorizedModificationException e) {
             ResponseEntity.status(403).body(e.getMessage());
         }

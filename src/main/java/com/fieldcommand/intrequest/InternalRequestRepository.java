@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-interface InternalRequestRepository extends CrudRepository<InternalRequest, Long> {
+public interface InternalRequestRepository extends CrudRepository<InternalRequest, Long> {
 
     List<InternalRequest> findAllByOrderByIdDesc();
 

@@ -1,9 +1,9 @@
 package com.fieldcommand.intrequest;
 
+import com.fieldcommand.user.User;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,8 +15,8 @@ public class InternalRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long userId;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private User owner;
 
     @NotBlank
     private String title;
@@ -30,27 +30,27 @@ public class InternalRequest {
 
     private String date = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date());
 
-    InternalRequest(Long userId, String title, String content) {
-        this.userId = userId;
-        this.title = title;
-        this.content = content;
-        this.status = InternalRequestStatus.WAITING;
-    }
-
     InternalRequest() {
 
+    }
+
+    public InternalRequest(String title, String content, User owner, InternalRequestStatus status) {
+        this.title = title;
+        this.content = content;
+        this.owner = owner;
+        this.status = status;
     }
 
     public Long getId() {
         return id;
     }
 
-    Long getUserId() {
-        return userId;
+    public User getOwner() {
+        return owner;
     }
 
-    void setUserId(Long userId) {
-        this.userId = userId;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     String getTitle() {
@@ -87,12 +87,11 @@ public class InternalRequest {
 
     @Override
     public String toString() {
-        return "InternalRequest{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return "InternalRequest: " +
+                "id = " + id +
+                ", owner = " + owner.getUsername() +
+                ", title = " + title +
+                ", content = " + content +
+                ", date = " + date;
     }
 }

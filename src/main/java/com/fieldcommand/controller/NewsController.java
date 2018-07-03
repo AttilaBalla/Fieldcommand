@@ -3,15 +3,12 @@ package com.fieldcommand.controller;
 import com.fieldcommand.newsfeed.NewsPostService;
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.payload.newsfeed.NewsPostJson;
-import com.fieldcommand.payload.user.UpdateJson;
 import com.fieldcommand.user.UserPrincipal;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
-import com.fieldcommand.utility.Exception.UserNotFoundException;
 import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -93,7 +90,7 @@ public class NewsController {
         GenericResponseJson response = new GenericResponseJson();
 
         try {
-            newspostService.deletePost(id, authentication);
+            newspostService.deleteNewsPost(id, authentication);
 
         } catch (NoSuchElementException | UnauthorizedModificationException ex) {
 
