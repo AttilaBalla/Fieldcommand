@@ -1,5 +1,6 @@
 package com.fieldcommand.intrequest;
 
+import com.fieldcommand.project.Project;
 import com.fieldcommand.user.User;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -28,17 +29,20 @@ public class InternalRequest {
     @Enumerated(EnumType.STRING)
     private InternalRequestStatus status;
 
+    private String project;
+
     private String date = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date());
 
     InternalRequest() {
 
     }
 
-    public InternalRequest(String title, String content, User owner, InternalRequestStatus status) {
+    public InternalRequest(String title, String content, User owner, InternalRequestStatus status, String project) {
         this.title = title;
         this.content = content;
         this.owner = owner;
         this.status = status;
+        this.project = project;
     }
 
     public Long getId() {
@@ -83,6 +87,14 @@ public class InternalRequest {
 
     void setStatus(InternalRequestStatus status) {
         this.status = status;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     @Override

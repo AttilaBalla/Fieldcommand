@@ -83,6 +83,7 @@ public class InternalRequestService {
         internalRequestHashMap.put("owner", internalRequest.getOwner().getUsername());
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
+        internalRequestHashMap.put("project", internalRequest.getProject());
 
         return internalRequestHashMap;
     }

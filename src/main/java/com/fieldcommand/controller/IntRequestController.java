@@ -28,7 +28,7 @@ public class IntRequestController {
     }
 
     @PostMapping(value = "/api/user/ir/create")
-    public ResponseEntity<?> internalRequest(@RequestBody InternalRequest internalRequest, Authentication authentication) {
+    public ResponseEntity<?> createInternalRequest(@RequestBody InternalRequest internalRequest, Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Long userId = userPrincipal.getId();

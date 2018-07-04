@@ -120,7 +120,8 @@ public class InitializerBean {
                 "Some sample request title",
                 "Content here yo, we need to do dis!",
                 ownerUser,
-                InternalRequestStatus.WAITING));
+                InternalRequestStatus.WAITING,
+                "ROTR"));
 
     }
 }
