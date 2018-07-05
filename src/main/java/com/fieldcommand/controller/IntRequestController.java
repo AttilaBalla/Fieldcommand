@@ -84,8 +84,8 @@ public class IntRequestController {
 
             this.internalRequestService.delete(id, authentication);
 
-        } catch (UnauthorizedModificationException e) {
-            ResponseEntity.status(403).body(e.getMessage());
+        } catch (UnauthorizedModificationException ex) {
+            return ResponseEntity.status(403).body(new GenericResponseJson(false, ex.getMessage()));
         }
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }

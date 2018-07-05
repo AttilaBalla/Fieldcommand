@@ -14,6 +14,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
+import javax.annotation.PostConstruct;
 import javax.management.relation.RoleNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -38,6 +41,8 @@ public class UserService implements UserDetailsService {
     private ProjectRepository projectRepository;
     private EmailSender emailSender;
 
+    private int userCount;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
@@ -47,6 +52,17 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
         this.emailSender = emailSender;
+    }
+
+    @EventListener
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        userCount = userRepository.countActiveUsers();
+
+        logger.info("usercount: {}", userCount);
+    }
+
+    public int getUserCount() {
+        return userCount;
     }
 
     private User findUserByEmail(String email) {
@@ -141,6 +157,7 @@ public class UserService implements UserDetailsService {
         }
 
         userRepository.save(user);
+        userCount++;
         logger.info("An account has been activated: {}", user.getUsername());
 
     }

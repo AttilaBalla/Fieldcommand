@@ -2,7 +2,10 @@ package com.fieldcommand.intrequest;
 
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
+import com.fieldcommand.user.UserService;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -11,17 +14,24 @@ import org.springframework.transaction.TransactionSystemException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InternalRequestService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private InternalRequestRepository internalRequestRepository;
     private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public InternalRequestService(InternalRequestRepository internalRequestRepository, UserRepository userRepository) {
+    public InternalRequestService(InternalRequestRepository internalRequestRepository,
+                                  UserRepository userRepository,
+                                  UserService userService) {
         this.internalRequestRepository = internalRequestRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public void save(InternalRequest intRequest, Long userId) throws TransactionSystemException {
@@ -30,6 +40,7 @@ public class InternalRequestService {
 
         intRequest.setOwner(owner);
         intRequest.setStatus(InternalRequestStatus.WAITING);
+
 
         this.internalRequestRepository.save(intRequest);
     }
@@ -62,9 +73,9 @@ public class InternalRequestService {
         this.internalRequestRepository.save(updateModel);
     }
 
-    public List<HashMap<String, String>> findAll() {
+    public List<HashMap<String, Object>> findAll() {
         List<InternalRequest> internalRequests = internalRequestRepository.findAllByOrderByIdDesc();
-        List<HashMap<String, String>> internalRequestData = new ArrayList<>();
+        List<HashMap<String, Object>> internalRequestData = new ArrayList<>();
 
         for (InternalRequest internalRequest : internalRequests) {
             internalRequestData.add(makeInternalRequestHashMap(internalRequest));
@@ -74,8 +85,8 @@ public class InternalRequestService {
     }
 
 
-    private HashMap<String, String> makeInternalRequestHashMap(InternalRequest internalRequest) {
-        HashMap<String, String> internalRequestHashMap = new HashMap<>();
+    private HashMap<String, Object> makeInternalRequestHashMap(InternalRequest internalRequest) {
+        HashMap<String, Object> internalRequestHashMap = new HashMap<>();
 
         internalRequestHashMap.put("id", internalRequest.getId().toString());
         internalRequestHashMap.put("title", internalRequest.getTitle());
@@ -84,13 +95,23 @@ public class InternalRequestService {
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
         internalRequestHashMap.put("project", internalRequest.getProject());
+        internalRequestHashMap.put("supportPercent", internalRequest.getSupportPercent());
+        internalRequestHashMap.put("supporters", internalRequest.getSupportingUsers().stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList()));
 
         return internalRequestHashMap;
     }
 
-    public HashMap<String, String> findOne(Long id) {
+    public HashMap<String, Object> findOne(Long id) {
         InternalRequest ir = internalRequestRepository.findOne(id);
 
+        double numberOfSupporters = ir.getSupportingUsers().size();
+        double totalUsers = userService.getUserCount();
+        int percent = (int)Math.floor((numberOfSupporters / totalUsers) * 100);
+        logger.info("supporters: {}, total: {}, percent: {}", numberOfSupporters, totalUsers, percent);
+
+        ir.setSupportPercent(percent);
         return makeInternalRequestHashMap(ir);
     }
 }

@@ -1,12 +1,13 @@
 package com.fieldcommand.intrequest;
 
-import com.fieldcommand.project.Project;
 import com.fieldcommand.user.User;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table( name = "int_requests" )
@@ -14,6 +15,7 @@ public class InternalRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "request_id")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -28,6 +30,17 @@ public class InternalRequest {
 
     @Enumerated(EnumType.STRING)
     private InternalRequestStatus status;
+
+
+    @ManyToMany(cascade = { CascadeType.MERGE })
+    @JoinTable(
+            name = "intrequest_user",
+            joinColumns = { @JoinColumn(name = "request_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> supportingUsers = new HashSet<>();
+
+    private int supportPercent;
 
     private String project;
 
@@ -49,11 +62,12 @@ public class InternalRequest {
         return id;
     }
 
-    public User getOwner() {
+    User getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    void setOwner(User owner) {
+        this.supportingUsers.add(owner);
         this.owner = owner;
     }
 
@@ -95,6 +109,22 @@ public class InternalRequest {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    Set<User> getSupportingUsers() {
+        return supportingUsers;
+    }
+
+    public void setSupportingUsers(Set<User> supportingUsers) {
+        this.supportingUsers = supportingUsers;
+    }
+
+    public int getSupportPercent() {
+        return supportPercent;
+    }
+
+    public void setSupportPercent(int supportPercent) {
+        this.supportPercent = supportPercent;
     }
 
     @Override

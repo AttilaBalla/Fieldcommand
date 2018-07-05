@@ -39,6 +39,9 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
     private Set<InternalRequest> internalRequests = new HashSet<>();
 
+    @ManyToMany(mappedBy = "supportingUsers")
+    private Set<InternalRequest> supportingRequests = new HashSet<>();
+
     @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "user_project",
@@ -160,6 +163,14 @@ public class User {
 
     public void setProjects(Set<Project> projects) {
         this.projects = projects;
+    }
+
+    public Set<InternalRequest> getSupportingRequests() {
+        return supportingRequests;
+    }
+
+    public void setSupportingRequests(Set<InternalRequest> supportingRequests) {
+        this.supportingRequests = supportingRequests;
     }
 
     @Override

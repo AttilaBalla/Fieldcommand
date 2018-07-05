@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static com.fieldcommand.utility.KeyGenerator.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class InitializerBean {
@@ -116,12 +113,20 @@ public class InitializerBean {
 
     private void initializeIntRequests() {
 
-        internalRequestRepository.save(new InternalRequest(
+        InternalRequest internalRequest = new InternalRequest(
                 "Some sample request title",
                 "Content here yo, we need to do dis!",
                 ownerUser,
                 InternalRequestStatus.WAITING,
-                "ROTR"));
+                "ROTR");
+
+        Set<User> supportingUsers = new HashSet<>();
+
+        supportingUsers.add(ownerUser);
+
+        internalRequest.setSupportingUsers(supportingUsers);
+
+        internalRequestRepository.save(internalRequest);
 
     }
 }

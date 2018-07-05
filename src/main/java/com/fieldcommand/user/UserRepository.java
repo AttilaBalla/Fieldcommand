@@ -1,8 +1,10 @@
 package com.fieldcommand.user;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NamedNativeQuery;
 import java.util.List;
 
 @Repository
@@ -17,5 +19,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findUserByActivationKey(String key);
 
     User findUserById(Long id);
+
+    @Query( nativeQuery = true, value = "SELECT COUNT(*) FROM users WHERE role_id > 2")
+    int countActiveUsers();
 
 }
