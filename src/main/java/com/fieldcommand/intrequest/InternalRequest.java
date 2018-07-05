@@ -119,6 +119,10 @@ public class InternalRequest {
         this.supportingUsers = supportingUsers;
     }
 
+    public void addSupportingUser(User user) {
+        this.supportingUsers.add(user);
+    }
+
     public int getSupportPercent() {
         return supportPercent;
     }

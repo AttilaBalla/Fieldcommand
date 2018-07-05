@@ -3,12 +3,14 @@ package com.fieldcommand.controller;
 import com.fieldcommand.intrequest.InternalRequestService;
 import com.fieldcommand.intrequest.InternalRequest;
 import com.fieldcommand.payload.GenericResponseJson;
+import com.fieldcommand.payload.intrequest.RequestSupportJson;
 import com.fieldcommand.user.UserPrincipal;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionSystemException;
@@ -76,6 +78,13 @@ public class IntRequestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/api/user/ir/support")
+    public ResponseEntity<?> handleSupport(@RequestBody RequestSupportJson requestSupportJson) {
+
+        internalRequestService.addSupporter(requestSupportJson);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new GenericResponseJson(true));
+    }
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")
     public ResponseEntity<?> internalRequestDelete(@PathVariable Long id, Authentication authentication) {

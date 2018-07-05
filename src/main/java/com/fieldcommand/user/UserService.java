@@ -162,56 +162,53 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void updateUser(UpdateJson updateJson, String updaterName)
+    public void prepareUserUpdate(UpdateJson updateJson, String updaterName)
             throws UserNotFoundException, IllegalArgumentException,
             UnauthorizedModificationException, TransactionSystemException {
 
-        Long userId = updateJson.getId();
-        String roleString = updateJson.getRole();
-
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserById(updateJson.getId());
         User updater = userRepository.findUserByUsername(updaterName);
-        Role role = roleRepository.findByRoleType(RoleType.valueOf(roleString));
+        Role newRole = roleRepository.findByRoleType(RoleType.valueOf(updateJson.getRole()));
 
         if(user == null) {
             throw new UserNotFoundException("No user exists with this ID!");
         }
 
+        Role oldRole = user.getRole();
+
         if(updater == null) {
             throw new UserNotFoundException("Could not retrieve information about updating user!");
         }
 
-        if(!validateAuthorizationToUpdate(updater, user, role)) {
+        if(!validateAuthorizationToUpdate(updater, user, newRole)) {
             throw new UnauthorizedModificationException("Update is not authorized for this account!");
         }
 
         if(!validateUniqueNameAndEmail(updateJson)) { // validate unique name & email constraint
             throw new IllegalArgumentException("Username and Email must be unique for every user!");
         } else {
-            user.setEmail(updateJson.getEmail());
-            user.setUsername(updateJson.getUsername());
-            user.setRole(role);
-            user.setProjects(makeProjectsSet(updateJson.getProjects()));
 
-            userRepository.save(user);
+            performUserUpdate(user, updateJson, newRole, oldRole);
 
         }
     }
 
-    private Set<Project> makeProjectsSet(List<String> projects) {
+    private void performUserUpdate(User user, UpdateJson updateJson, Role newRole, Role oldRole) {
 
-        Set<Project> projectsSet = new HashSet<>();
-
-        if(projects.isEmpty()) {
-            return projectsSet;
+        if(newRole.getRoleType() == RoleType.ROLE_DISABLED) {
+            userCount--; // if user gets disabled, decrease active user counter
         }
 
-        for (String project: projects
-                ) {
-            projectsSet.add(projectRepository.findByShortName(project));
+        if(oldRole.getRoleType() == RoleType.ROLE_DISABLED && newRole.getRoleType() != RoleType.ROLE_DISABLED){
+            userCount++; // if user was disabled but gets a proper role again, increase the counter
         }
 
-        return projectsSet;
+        user.setEmail(updateJson.getEmail());
+        user.setUsername(updateJson.getUsername());
+        user.setRole(newRole);
+        user.setProjects(makeProjectsSet(updateJson.getProjects()));
+
+        userRepository.save(user);
     }
 
     private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {
@@ -241,6 +238,22 @@ public class UserService implements UserDetailsService {
         user = userRepository.findUserByUsername(username);
 
         return user == null || user.getId() == userId;
+    }
+
+    private Set<Project> makeProjectsSet(List<String> projects) {
+
+        Set<Project> projectsSet = new HashSet<>();
+
+        if(projects.isEmpty()) {
+            return projectsSet;
+        }
+
+        for (String project: projects
+                ) {
+            projectsSet.add(projectRepository.findByShortName(project));
+        }
+
+        return projectsSet;
     }
 
     @Transactional

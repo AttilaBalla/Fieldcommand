@@ -1,5 +1,6 @@
 package com.fieldcommand.intrequest;
 
+import com.fieldcommand.payload.intrequest.RequestSupportJson;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.user.UserService;
@@ -113,5 +114,15 @@ public class InternalRequestService {
 
         ir.setSupportPercent(percent);
         return makeInternalRequestHashMap(ir);
+    }
+
+    public void addSupporter(RequestSupportJson requestSupportJson) {
+
+        InternalRequest intRequest = internalRequestRepository.findOne(requestSupportJson.getRequestId());
+        User user = userRepository.findUserByUsername(requestSupportJson.getUsername());
+        intRequest.addSupportingUser(user);
+
+        internalRequestRepository.save(intRequest);
+
     }
 }

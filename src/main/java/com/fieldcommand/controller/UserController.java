@@ -86,7 +86,7 @@ public class UserController {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
-            userService.updateUser(updateJson, authentication.getName());
+            userService.prepareUserUpdate(updateJson, authentication.getName());
 
         } catch (IllegalArgumentException | UnauthorizedModificationException | UserNotFoundException ex) {
 
