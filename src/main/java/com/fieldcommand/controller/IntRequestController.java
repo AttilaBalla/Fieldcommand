@@ -60,7 +60,7 @@ public class IntRequestController {
         return JsonUtil.toJson(internalRequestService.findOne(id));
     }
 
-    @PostMapping("/api/user/ir/update")
+    @PutMapping("/api/user/ir/update")
     public ResponseEntity<?> updateInternalRequest(@RequestBody InternalRequest update, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();
@@ -81,9 +81,16 @@ public class IntRequestController {
     @PostMapping("/api/user/ir/support")
     public ResponseEntity<?> handleSupport(@RequestBody RequestSupportJson requestSupportJson) {
 
-        internalRequestService.addSupporter(requestSupportJson);
+        int newSupportPercent;
 
-        return ResponseEntity.status(HttpStatus.OK).body(new GenericResponseJson(true));
+        try {
+            newSupportPercent = internalRequestService.handleSupporter(requestSupportJson);
+        } catch (UnauthorizedModificationException ex) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseJson(false, ex.getMessage()));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(new GenericResponseJson(true, Integer.toString(newSupportPercent)));
     }
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")

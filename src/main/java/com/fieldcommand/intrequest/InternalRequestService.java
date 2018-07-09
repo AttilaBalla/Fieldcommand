@@ -15,6 +15,7 @@ import org.springframework.transaction.TransactionSystemException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,23 +107,39 @@ public class InternalRequestService {
 
     public HashMap<String, Object> findOne(Long id) {
         InternalRequest ir = internalRequestRepository.findOne(id);
+        ir.setSupportPercent(calculateSupportPercent(ir));
 
-        double numberOfSupporters = ir.getSupportingUsers().size();
-        double totalUsers = userService.getUserCount();
-        int percent = (int)Math.floor((numberOfSupporters / totalUsers) * 100);
-        logger.info("supporters: {}, total: {}, percent: {}", numberOfSupporters, totalUsers, percent);
-
-        ir.setSupportPercent(percent);
         return makeInternalRequestHashMap(ir);
     }
 
-    public void addSupporter(RequestSupportJson requestSupportJson) {
+    // returns new % after support is added/removed
+    public int handleSupporter(RequestSupportJson requestSupportJson) throws UnauthorizedModificationException {
 
         InternalRequest intRequest = internalRequestRepository.findOne(requestSupportJson.getRequestId());
         User user = userRepository.findUserByUsername(requestSupportJson.getUsername());
-        intRequest.addSupportingUser(user);
 
+        if(intRequest.getOwner() == user) {
+            throw new UnauthorizedModificationException("You cannot withdraw support of a request that you made!");
+        }
+
+        Set<User> supporterSet = intRequest.getSupportingUsers();
+
+        if(supporterSet.contains(user)) {
+            supporterSet.remove(user);
+        } else {
+            supporterSet.add(user);
+        }
+
+        intRequest.setSupportingUsers(supporterSet);
+        intRequest.setSupportPercent(calculateSupportPercent(intRequest));
         internalRequestRepository.save(intRequest);
 
+        return intRequest.getSupportPercent();
+    }
+
+    private int calculateSupportPercent(InternalRequest internalRequest) {
+        double numberOfSupporters = internalRequest.getSupportingUsers().size();
+        double totalUsers = userService.getUserCount();
+        return (int)Math.floor((numberOfSupporters / totalUsers) * 100);
     }
 }

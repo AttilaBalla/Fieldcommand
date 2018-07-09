@@ -119,15 +119,11 @@ public class InternalRequest {
         this.supportingUsers = supportingUsers;
     }
 
-    public void addSupportingUser(User user) {
-        this.supportingUsers.add(user);
-    }
-
-    public int getSupportPercent() {
+    int getSupportPercent() {
         return supportPercent;
     }
 
-    public void setSupportPercent(int supportPercent) {
+    void setSupportPercent(int supportPercent) {
         this.supportPercent = supportPercent;
     }
 
@@ -138,6 +134,8 @@ public class InternalRequest {
                 ", owner = " + owner.getUsername() +
                 ", title = " + title +
                 ", content = " + content +
-                ", date = " + date;
+                ", date = " + date +
+                ", supporting users = " + getSupportingUsers() +
+                ", percent = " + getSupportPercent();
     }
 }
