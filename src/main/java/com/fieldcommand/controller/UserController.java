@@ -81,7 +81,7 @@ public class UserController {
         return JsonUtil.toJson(response);
     }
 
-    @PostMapping("/api/admin/updateUser")
+    @PutMapping("/api/admin/updateUser")
     public ResponseEntity<?> updateUser(@RequestBody UpdateJson updateJson, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();

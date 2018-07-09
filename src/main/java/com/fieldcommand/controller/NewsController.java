@@ -64,7 +64,7 @@ public class NewsController {
         }
     }
 
-    @PostMapping("/api/dev/updateNewsPost")
+    @PutMapping("/api/dev/updateNewsPost")
     public ResponseEntity<?> updateNewsPost(@RequestBody NewsPostJson newsPostJson, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();
