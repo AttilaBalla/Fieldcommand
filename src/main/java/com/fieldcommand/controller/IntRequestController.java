@@ -3,6 +3,7 @@ package com.fieldcommand.controller;
 import com.fieldcommand.intrequest.InternalRequestService;
 import com.fieldcommand.intrequest.InternalRequest;
 import com.fieldcommand.payload.GenericResponseJson;
+import com.fieldcommand.payload.intrequest.RequestStatusJson;
 import com.fieldcommand.payload.intrequest.RequestSupportJson;
 import com.fieldcommand.user.UserPrincipal;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
@@ -94,15 +95,28 @@ public class IntRequestController {
     }
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")
-    public ResponseEntity<?> internalRequestDelete(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<?> deleteInternalRequest(@PathVariable Long id, Authentication authentication) {
 
         try {
 
-            this.internalRequestService.delete(id, authentication);
+            internalRequestService.delete(id, authentication);
 
         } catch (UnauthorizedModificationException ex) {
             return ResponseEntity.status(403).body(new GenericResponseJson(false, ex.getMessage()));
         }
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
+    }
+
+    @PutMapping(value = "/api/dev/ir/updateStatus")
+    public ResponseEntity<?> updateIntRequestStatus(@RequestBody RequestStatusJson requestStatusJson, Authentication authentication) {
+
+        try {
+            internalRequestService.updateIntRequestStatus(requestStatusJson, authentication.getName());
+        } catch (UnauthorizedModificationException ex) {
+
+            return ResponseEntity.status(403).body(new GenericResponseJson(false, ex.getMessage()));
+        }
+        return ResponseEntity.status(200).body(new GenericResponseJson(true));
+
     }
 }

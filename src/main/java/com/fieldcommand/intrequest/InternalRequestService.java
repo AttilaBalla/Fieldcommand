@@ -1,6 +1,8 @@
 package com.fieldcommand.intrequest;
 
+import com.fieldcommand.payload.intrequest.RequestStatusJson;
 import com.fieldcommand.payload.intrequest.RequestSupportJson;
+import com.fieldcommand.project.ProjectRepository;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.user.UserService;
@@ -24,16 +26,19 @@ public class InternalRequestService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private InternalRequestRepository internalRequestRepository;
+    private ProjectRepository projectRepository;
     private UserRepository userRepository;
     private UserService userService;
 
     @Autowired
     public InternalRequestService(InternalRequestRepository internalRequestRepository,
                                   UserRepository userRepository,
+                                  ProjectRepository projectRepository,
                                   UserService userService) {
         this.internalRequestRepository = internalRequestRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.projectRepository = projectRepository;
     }
 
     public void save(InternalRequest intRequest, Long userId) throws TransactionSystemException {
@@ -41,6 +46,7 @@ public class InternalRequestService {
         User owner = userRepository.findUserById(userId);
 
         intRequest.setOwner(owner);
+        intRequest.setProject(projectRepository.findByShortName(intRequest.getProjectName()));
         intRequest.setStatus(InternalRequestStatus.WAITING);
 
 
@@ -75,6 +81,28 @@ public class InternalRequestService {
         this.internalRequestRepository.save(updateModel);
     }
 
+    public void updateIntRequestStatus(RequestStatusJson requestStatusJson, String updaterName) throws UnauthorizedModificationException {
+
+        User updater = userRepository.findUserByUsername(updaterName);
+
+        InternalRequest internalRequest = internalRequestRepository.findOne(requestStatusJson.getRequestId());
+
+        if(updater.getProjects().stream().noneMatch(project -> project == internalRequest.getProject())) {
+            throw new UnauthorizedModificationException("Failed to update status, you are not assigned to this project!");
+        }
+
+
+        internalRequest.setStatus(InternalRequestStatus.valueOf(requestStatusJson.getStatus()));
+
+        String response = requestStatusJson.getResponse();
+
+        if(response.length() > 0) {
+            internalRequest.setResponse(response);
+        }
+
+        internalRequestRepository.save(internalRequest);
+    }
+
     public List<HashMap<String, Object>> findAll() {
         List<InternalRequest> internalRequests = internalRequestRepository.findAllByOrderByIdDesc();
         List<HashMap<String, Object>> internalRequestData = new ArrayList<>();
@@ -96,7 +124,7 @@ public class InternalRequestService {
         internalRequestHashMap.put("owner", internalRequest.getOwner().getUsername());
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
-        internalRequestHashMap.put("project", internalRequest.getProject());
+        internalRequestHashMap.put("project", internalRequest.getProject().getShortName());
         internalRequestHashMap.put("supportPercent", internalRequest.getSupportPercent());
         internalRequestHashMap.put("supporters", internalRequest.getSupportingUsers().stream()
                 .map(User::getUsername)

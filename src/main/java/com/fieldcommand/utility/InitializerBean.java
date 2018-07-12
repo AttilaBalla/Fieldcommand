@@ -125,6 +125,7 @@ public class InitializerBean {
         supportingUsers.add(ownerUser);
 
         internalRequest.setSupportingUsers(supportingUsers);
+        internalRequest.setProject(projectRepository.findByShortName("ROTR"));
 
         internalRequestRepository.save(internalRequest);
 

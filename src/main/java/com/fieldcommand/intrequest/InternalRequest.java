@@ -1,5 +1,6 @@
 package com.fieldcommand.intrequest;
 
+import com.fieldcommand.project.Project;
 import com.fieldcommand.user.User;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -31,6 +32,7 @@ public class InternalRequest {
     @Enumerated(EnumType.STRING)
     private InternalRequestStatus status;
 
+    private String response;
 
     @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
@@ -42,20 +44,23 @@ public class InternalRequest {
 
     private int supportPercent;
 
-    private String project;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Project project;
+
+    @Transient
+    private String projectName;
 
     private String date = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(new Date());
 
     InternalRequest() {
-
     }
 
-    public InternalRequest(String title, String content, User owner, InternalRequestStatus status, String project) {
+    public InternalRequest(String title, String content, User owner, InternalRequestStatus status, String projectName) {
         this.title = title;
         this.content = content;
         this.owner = owner;
         this.status = status;
-        this.project = project;
+        this.projectName = projectName;
     }
 
     public Long getId() {
@@ -103,14 +108,6 @@ public class InternalRequest {
         this.status = status;
     }
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
     Set<User> getSupportingUsers() {
         return supportingUsers;
     }
@@ -125,6 +122,30 @@ public class InternalRequest {
 
     void setSupportPercent(int supportPercent) {
         this.supportPercent = supportPercent;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    void setResponse(String response) {
+        this.response = response;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     @Override
