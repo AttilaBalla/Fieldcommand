@@ -1,5 +1,6 @@
 package com.fieldcommand.project;
 
+import com.fieldcommand.intrequest.InternalRequest;
 import com.fieldcommand.user.User;
 
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class Project {
 
     @ManyToMany(mappedBy = "projects")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    private Set<InternalRequest> internalRequests = new HashSet<>(); // internal requests for this project
 
     public Project() {}
 
