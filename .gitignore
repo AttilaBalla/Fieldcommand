@@ -66,4 +66,13 @@ modules.xml
 # target folder
 target
 
+application-dev.properties
+src/main/resources/META-INF/
+.vscode/
+
+.vscode/
+node_modules/
+bundle.js
+bundle.js.map
+
 # End of https://www.gitignore.io/api/intellij+iml
