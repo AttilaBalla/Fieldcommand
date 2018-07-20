@@ -67,6 +67,7 @@ modules.xml
 target
 
 application-dev.properties
+application-prod.properties
 src/main/resources/META-INF/
 .vscode/
 
