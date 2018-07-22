@@ -7,23 +7,23 @@ import com.fieldcommand.role.Role;
 import com.fieldcommand.role.RoleType;
 import com.fieldcommand.payload.GenericResponseJson;
 import com.fieldcommand.role.RoleRepository;
-import com.fieldcommand.utility.EmailSender;
+import com.fieldcommand.utility.EmailSender.EmailSender;
 import com.fieldcommand.utility.Exception.UnauthorizedModificationException;
 import com.fieldcommand.utility.Exception.UserNotFoundException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
-import javax.annotation.PostConstruct;
 import javax.management.relation.RoleNotFoundException;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -46,11 +46,15 @@ public class UserService implements UserDetailsService {
     @Autowired
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       ProjectRepository projectRepository,
-                       EmailSender emailSender) {
+                       ProjectRepository projectRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
+    }
+
+    @Autowired
+    @Qualifier("springMail")
+    public void setEmailSender(EmailSender emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -119,7 +123,7 @@ public class UserService implements UserDetailsService {
         return response;
     }
 
-    public boolean registerUser(User user) throws RoleNotFoundException, MailException {
+    public void registerUser(User user) throws RoleNotFoundException, MailSendException {
 
         Role userRole = roleRepository.findByRoleType(RoleType.ROLE_NEW);
 
@@ -135,29 +139,32 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
         logger.info("A new user has been added: {}, e-mail: {}", user.getUsername(), user.getEmail());
-
-        return true;
     }
 
-    public void activateUser(String key, String password) throws UserNotFoundException {
+    public void activateUser(String key, String password, String username) throws UserNotFoundException {
 
         User user = userRepository.findUserByActivationKey(key);
 
         if(user == null) {
             throw new UserNotFoundException("No user belongs to that key!");
         }
+        // if we find a user with that name and it's not this user then that name is taken
+        if(userRepository.findUserByUsername(username) != null && !username.equals(user.getUsername())) {
+            throw new IllegalArgumentException("Username is already taken!");
+        }
 
         String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
         user.setPassword(passwordHash);
         user.setActivationKey("");
+        user.setUsername(username);
 
         if(user.getRole().getRoleType() == RoleType.ROLE_NEW) {
             user.setRole(roleRepository.findByRoleType(RoleType.ROLE_USER));
         }
 
         userRepository.save(user);
-        userCount++;
+        userCount = userRepository.countActiveUsers();
         logger.info("An account has been activated: {}", user.getUsername());
 
     }
@@ -195,20 +202,14 @@ public class UserService implements UserDetailsService {
 
     private void performUserUpdate(User user, UpdateJson updateJson, Role newRole, Role oldRole) {
 
-        if(newRole.getRoleType() == RoleType.ROLE_DISABLED) {
-            userCount--; // if user gets disabled, decrease active user counter
-        }
-
-        if(oldRole.getRoleType() == RoleType.ROLE_DISABLED && newRole.getRoleType() != RoleType.ROLE_DISABLED){
-            userCount++; // if user was disabled but gets a proper role again, increase the counter
-        }
-
         user.setEmail(updateJson.getEmail());
         user.setUsername(updateJson.getUsername());
         user.setRole(newRole);
         user.setProjects(makeProjectsSet(updateJson.getProjects()));
 
         userRepository.save(user);
+
+        userCount = userRepository.countActiveUsers();
     }
 
     private boolean validateAuthorizationToUpdate(User updater, User user, Role role) {

@@ -103,6 +103,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
