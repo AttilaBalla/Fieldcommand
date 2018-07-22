@@ -3,6 +3,7 @@ package com.fieldcommand.intrequest;
 import com.fieldcommand.payload.intrequest.RequestStatusJson;
 import com.fieldcommand.payload.intrequest.RequestSupportJson;
 import com.fieldcommand.project.ProjectRepository;
+import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.user.UserService;
@@ -59,7 +60,7 @@ public class InternalRequestService {
 
         InternalRequest internalRequest = internalRequestRepository.findOne(id);
 
-        if (internalRequest.getOwner() == deleter) {
+        if (internalRequest.getOwner() == deleter || deleter.getRole().getRoleType() == RoleType.ROLE_OWNER) {
             this.internalRequestRepository.delete(id);
         } else {
             throw new UnauthorizedModificationException("You have no permission to delete this internal request!");

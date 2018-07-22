@@ -58,7 +58,14 @@ public class IntRequestController {
 
     @GetMapping(value = "/api/user/ir/get/{id}")
     public String getInternalRequest(@PathVariable Long id) {
-        return JsonUtil.toJson(internalRequestService.findOne(id));
+        try {
+
+            return JsonUtil.toJson(internalRequestService.findOne(id));
+
+        } catch(IllegalArgumentException ex) {
+
+            return JsonUtil.toJson(new GenericResponseJson(false, ex.getMessage()));
+        }
     }
 
     @PutMapping("/api/user/ir/update")
