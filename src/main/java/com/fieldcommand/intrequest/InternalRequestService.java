@@ -100,6 +100,8 @@ public class InternalRequestService {
             internalRequest.setResponse(response);
         }
 
+        internalRequest.setHandledBy(updaterName);
+
         internalRequestRepository.save(internalRequest);
     }
 
@@ -124,6 +126,8 @@ public class InternalRequestService {
         internalRequestHashMap.put("owner", internalRequest.getOwner().getUsername());
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
+        internalRequestHashMap.put("response", internalRequest.getResponse());
+        internalRequestHashMap.put("handledBy", internalRequest.getHandledBy());
         internalRequestHashMap.put("project", internalRequest.getProject().getShortName());
         internalRequestHashMap.put("supportPercent", internalRequest.getSupportPercent());
         internalRequestHashMap.put("supporters", internalRequest.getSupportingUsers().stream()
@@ -135,6 +139,11 @@ public class InternalRequestService {
 
     public HashMap<String, Object> findOne(Long id) {
         InternalRequest ir = internalRequestRepository.findOne(id);
+
+        if(ir == null) {
+            throw new IllegalArgumentException("No request found for this id!");
+        }
+
         ir.setSupportPercent(calculateSupportPercent(ir));
 
         return makeInternalRequestHashMap(ir);
