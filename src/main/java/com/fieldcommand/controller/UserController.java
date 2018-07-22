@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.TransactionSystemException;
@@ -54,28 +54,28 @@ public class UserController {
             return JsonUtil.toJson(response);
         }
 
-        boolean registerSuccess = false;
         try {
 
-            registerSuccess = userService.registerUser(new User(email, username));
+            User user = new User();
+
+            user.setUsername(username);
+            user.setEmail(email);
+
+            userService.registerUser(user);
 
         } catch (RoleNotFoundException ex) {
             logger.error("Failed to set role for {}, reason: {}", username, ex.getMessage());
             response.setSuccess(false);
             response.setInformation(internalError);
 
-        } catch (MailException ex) {
+        } catch (MailSendException ex) {
             logger.error("Failed to send e-mail to {}, reason: {}", email, ex.getMessage());
             response.setSuccess(false);
             response.setInformation(internalError);
-        }
 
-        if (registerSuccess) {
-            response.setSuccess(true);
-
-        } else {
+        } catch (IllegalArgumentException ex) {
             response.setSuccess(false);
-            response.setInformation(internalError);
+            response.setInformation(ex.getMessage());
         }
 
         return JsonUtil.toJson(response);

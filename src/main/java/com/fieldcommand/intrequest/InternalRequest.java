@@ -34,6 +34,8 @@ public class InternalRequest {
 
     private String response;
 
+    private String handledBy;
+
     @ManyToMany(cascade = { CascadeType.MERGE })
     @JoinTable(
             name = "intrequest_user",
@@ -130,6 +132,14 @@ public class InternalRequest {
 
     void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getHandledBy() {
+        return handledBy;
+    }
+
+    public void setHandledBy(String handledBy) {
+        this.handledBy = handledBy;
     }
 
     public Project getProject() {

@@ -3,6 +3,7 @@ package com.fieldcommand.intrequest;
 import com.fieldcommand.payload.intrequest.RequestStatusJson;
 import com.fieldcommand.payload.intrequest.RequestSupportJson;
 import com.fieldcommand.project.ProjectRepository;
+import com.fieldcommand.role.RoleType;
 import com.fieldcommand.user.User;
 import com.fieldcommand.user.UserRepository;
 import com.fieldcommand.user.UserService;
@@ -59,7 +60,7 @@ public class InternalRequestService {
 
         InternalRequest internalRequest = internalRequestRepository.findOne(id);
 
-        if (internalRequest.getOwner() == deleter) {
+        if (internalRequest.getOwner() == deleter || deleter.getRole().getRoleType() == RoleType.ROLE_OWNER) {
             this.internalRequestRepository.delete(id);
         } else {
             throw new UnauthorizedModificationException("You have no permission to delete this internal request!");
@@ -100,6 +101,8 @@ public class InternalRequestService {
             internalRequest.setResponse(response);
         }
 
+        internalRequest.setHandledBy(updaterName);
+
         internalRequestRepository.save(internalRequest);
     }
 
@@ -124,6 +127,8 @@ public class InternalRequestService {
         internalRequestHashMap.put("owner", internalRequest.getOwner().getUsername());
         internalRequestHashMap.put("date", internalRequest.getDate());
         internalRequestHashMap.put("status", (internalRequest.getStatus().toString()));
+        internalRequestHashMap.put("response", internalRequest.getResponse());
+        internalRequestHashMap.put("handledBy", internalRequest.getHandledBy());
         internalRequestHashMap.put("project", internalRequest.getProject().getShortName());
         internalRequestHashMap.put("supportPercent", internalRequest.getSupportPercent());
         internalRequestHashMap.put("supporters", internalRequest.getSupportingUsers().stream()
@@ -135,6 +140,11 @@ public class InternalRequestService {
 
     public HashMap<String, Object> findOne(Long id) {
         InternalRequest ir = internalRequestRepository.findOne(id);
+
+        if(ir == null) {
+            throw new IllegalArgumentException("No request found for this id!");
+        }
+
         ir.setSupportPercent(calculateSupportPercent(ir));
 
         return makeInternalRequestHashMap(ir);
