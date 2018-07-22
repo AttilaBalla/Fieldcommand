@@ -98,6 +98,15 @@ public class User {
     }
 
     public void setUsername(String username) {
+
+        if(username.length() < 3) {
+            throw new IllegalArgumentException("Username is too short!");
+        }
+
+        if(!username.matches("[A-Za-z0-9_]+")) {
+            throw new IllegalArgumentException("Username must contain alphanumeric characters only!");
+        }
+
         this.username = username;
     }
 
@@ -125,7 +134,12 @@ public class User {
         return email;
     }
 
-    void setEmail(String email) {
+    public void setEmail(String email) {
+
+        if(!email.matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+            throw new IllegalArgumentException("Email address format is not valid!");
+        }
+
         this.email = email;
     }
 
