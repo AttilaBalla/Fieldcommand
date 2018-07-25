@@ -38,9 +38,9 @@ public class NewsPostService {
 
     }
 
-    public List<HashMap<String, String>> findAll() {
+    public List<HashMap<String, Object>> findAll() {
         List<NewsPost> newsPosts = newspostRepository.findAllByDeletedFalseOrderByIdDesc();
-        List<HashMap<String, String>> newsPostData = new ArrayList<>();
+        List<HashMap<String, Object>> newsPostData = new ArrayList<>();
 
         for (NewsPost newsPost: newsPosts) {
             newsPostData.add(makeNewsPostHashMap(newsPost));
@@ -49,7 +49,7 @@ public class NewsPostService {
         return newsPostData;
     }
 
-    public HashMap<String, String> findNewsPost(long id) throws NoSuchElementException {
+    public HashMap<String, Object> findNewsPost(long id) throws NoSuchElementException {
 
         NewsPost newsPost = newspostRepository.findOne(id);
 
@@ -60,14 +60,14 @@ public class NewsPostService {
         return makeNewsPostHashMap(newsPost);
     }
 
-    private HashMap<String, String> makeNewsPostHashMap(NewsPost newsPost) {
-        HashMap<String, String> newsPostHashMap = new HashMap<>();
+    private HashMap<String, Object> makeNewsPostHashMap(NewsPost newsPost) {
+        HashMap<String, Object> newsPostHashMap = new HashMap<>();
 
         newsPostHashMap.put("id", newsPost.getId().toString());
         newsPostHashMap.put("title", newsPost.getTitle());
         newsPostHashMap.put("owner", newsPost.getOwner().getUsername());
         newsPostHashMap.put("date", newsPost.getTimestamp());
-        newsPostHashMap.put("visible", (newsPost.isVisibility()) ? "True" : "False");
+        newsPostHashMap.put("visible", (newsPost.isVisibility()));
         newsPostHashMap.put("content", newsPost.getContent());
 
         return newsPostHashMap;

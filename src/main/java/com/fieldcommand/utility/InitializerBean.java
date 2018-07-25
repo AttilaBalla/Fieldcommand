@@ -14,7 +14,6 @@ import com.fieldcommand.role.RoleRepository;
 import com.fieldcommand.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import static com.fieldcommand.utility.KeyGenerator.*;
 
 import java.util.*;
 
@@ -44,61 +43,60 @@ public class InitializerBean {
         initializeProjects();
         initializeRoles();
         initializeUsers();
-        initializeNews();
-        initializeIntRequests();
+        //initializeNews(); // keeping this if testing is required
+        //initializeIntRequests();
     }
 
     private void initializeProjects() {
-        List<Project> projects = new ArrayList<>();
 
-        projects.add(new Project("Rise of the Reds", "ROTR"));
-        projects.add(new Project("SWR.net", "SWRNET"));
-        projects.add(new Project("FieldCommand", "FC"));
+        if(projectRepository.count() == 0) {
 
-        projectRepository.save(projects);
+            List<Project> projects = new ArrayList<>();
+
+            projects.add(new Project("Rise of the Reds", "ROTR"));
+            projects.add(new Project("SWR.net", "SWRNET"));
+            projects.add(new Project("FieldCommand", "FC"));
+
+            projectRepository.save(projects);
+        }
 
     }
 
     private void initializeRoles() {
 
-        List<Role> roles = new ArrayList<>();
+        if(roleRepository.count() == 0) {
 
-        roles.add(new Role(RoleType.ROLE_DISABLED, 0));
-        roles.add(new Role(RoleType.ROLE_NEW, 1));
-        roles.add(new Role(RoleType.ROLE_USER, 10));
-        roles.add(new Role(RoleType.ROLE_DEVELOPER, 20));
-        roles.add(new Role(RoleType.ROLE_ADMIN, 30));
-        roles.add(new Role(RoleType.ROLE_OWNER, 40));
+            List<Role> roles = new ArrayList<>();
 
-        roleRepository.save(roles);
+            roles.add(new Role(RoleType.ROLE_DISABLED, 0));
+            roles.add(new Role(RoleType.ROLE_NEW, 1));
+            roles.add(new Role(RoleType.ROLE_USER, 10));
+            roles.add(new Role(RoleType.ROLE_DEVELOPER, 20));
+            roles.add(new Role(RoleType.ROLE_ADMIN, 30));
+            roles.add(new Role(RoleType.ROLE_OWNER, 40));
+
+            roleRepository.save(roles);
+        }
 
     }
 
     private void initializeUsers() {
 
-        List<User> users = new ArrayList<>();
-        Set<Project> Projects = new HashSet<>();
+        if(userRepository.count() == 0) {
 
-        Role newUser = roleRepository.findByRoleType(RoleType.ROLE_NEW);
-        Role user = roleRepository.findByRoleType(RoleType.ROLE_USER);
-        Role owner = roleRepository.findByRoleType(RoleType.ROLE_OWNER);
-        Role developer = roleRepository.findByRoleType(RoleType.ROLE_DEVELOPER);
-        Projects.add(projectRepository.findByShortName("FC"));
+            Set<Project> Projects = new HashSet<>();
 
-        users.add(new User("user@email1.com", "user1", newUser, generateKey()));
-        users.add(new User("user@email2.com", "user2", user, generateKey()));
-        users.add(new User("user@email3.com", "user3", newUser, generateKey()));
+            Role owner = roleRepository.findByRoleType(RoleType.ROLE_OWNER);
+            Projects.add(projectRepository.findByShortName("FC"));
+            Projects.add(projectRepository.findByShortName("ROTR"));
+            Projects.add(projectRepository.findByShortName("SWRNET"));
 
-        ownerUser = new User("xattus@gmail.com", "XAttus", owner);
-        ownerUser.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
-        ownerUser.setProjects(Projects);
-        users.add(ownerUser);
+            ownerUser = new User("xattus@gmail.com", "XAttus", owner);
+            ownerUser.setPassword("$2a$10$9fQS0odOowHrEnZcpO93s.00RPWfdVrpoVpaSl3LpDE.z7RuxjVF6");
+            ownerUser.setProjects(Projects);
 
-        User dev = new User("developer@developer.com", "DEVELOPAH",developer);
-        dev.setPassword("$2a$10$yXibQzirximkH4RRjxbqTunWOuB456FY61fdqsxSItrIe.D1J21PK");
-        users.add(dev);
-
-        userRepository.save(users);
+            userRepository.save(ownerUser);
+        }
     }
 
     private void initializeNews() {
