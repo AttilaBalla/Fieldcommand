@@ -81,6 +81,7 @@ public class User {
         userData.put("role", role.toString());
         userData.put("rolePower", role.getPower().toString());
         userData.put("projects", getProjectStringList());
+        userData.put("activated", (activationKey == null));
 
         return userData;
     }
@@ -101,6 +102,10 @@ public class User {
 
         if(username.length() < 3) {
             throw new IllegalArgumentException("Username is too short!");
+        }
+
+        if(username.length() > 30) {
+            throw new IllegalArgumentException("Username is too long!");
         }
 
         if(!username.matches("[A-Za-z0-9_]+")) {
