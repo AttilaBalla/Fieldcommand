@@ -156,7 +156,7 @@ public class UserService implements UserDetailsService {
         String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
         user.setPassword(passwordHash);
-        user.setActivationKey("");
+        user.setActivationKey(null);
         user.setUsername(username);
 
         if(user.getRole().getRoleType() == RoleType.ROLE_NEW) {
@@ -287,4 +287,21 @@ public class UserService implements UserDetailsService {
         return UserPrincipal.create(user);
     }
 
+    public void resetActivation(Long userId) throws UserNotFoundException {
+
+        User user = userRepository.findUserById(userId);
+
+        if(user == null) {
+            throw new UserNotFoundException("User could not be found:" + userId);
+        }
+
+        user.setPassword(null);
+        String activationKey = generateKey();
+        user.setActivationKey(activationKey);
+
+        userRepository.save(user);
+
+        emailSender.sendMessage(user.getEmail(), activationKey);
+
+    }
 }

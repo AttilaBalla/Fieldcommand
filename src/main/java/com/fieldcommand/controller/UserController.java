@@ -12,6 +12,7 @@ import com.fieldcommand.utility.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.core.Authentication;
@@ -105,6 +106,24 @@ public class UserController {
         response.setSuccess(true);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/api/admin/resetUser")
+    public ResponseEntity<?> resetUser(@RequestBody Long userId) {
+
+        GenericResponseJson response = new GenericResponseJson();
+
+        try {
+            userService.resetActivation(userId);
+        } catch(UserNotFoundException ex) {
+
+            response.setSuccess(false);
+            response.setInformation(ex.getMessage());
+
+            return ResponseEntity.badRequest().body(response);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
 
