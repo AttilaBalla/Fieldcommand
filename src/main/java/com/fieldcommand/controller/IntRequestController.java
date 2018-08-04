@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 public class IntRequestController {
 
@@ -89,16 +91,16 @@ public class IntRequestController {
     @PostMapping("/api/user/ir/support")
     public ResponseEntity<?> handleSupport(@RequestBody RequestSupportJson requestSupportJson) {
 
-        int newSupportPercent;
+        HashMap response;
 
         try {
-            newSupportPercent = internalRequestService.handleSupporter(requestSupportJson);
+            response = internalRequestService.handleSupporter(requestSupportJson);
         } catch (UnauthorizedModificationException ex) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseJson(false, ex.getMessage()));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new GenericResponseJson(true, Integer.toString(newSupportPercent)));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping(value = "/api/user/ir/delete/{id}")

@@ -151,8 +151,9 @@ public class InternalRequestService {
     }
 
     // returns new % after support is added/removed
-    public int handleSupporter(RequestSupportJson requestSupportJson) throws UnauthorizedModificationException {
+    public HashMap<String, Object> handleSupporter(RequestSupportJson requestSupportJson) throws UnauthorizedModificationException {
 
+        HashMap<String, Object> response = new HashMap<>();
         InternalRequest intRequest = internalRequestRepository.findOne(requestSupportJson.getRequestId());
         User user = userRepository.findUserByUsername(requestSupportJson.getUsername());
 
@@ -172,7 +173,12 @@ public class InternalRequestService {
         intRequest.setSupportPercent(calculateSupportPercent(intRequest));
         internalRequestRepository.save(intRequest);
 
-        return intRequest.getSupportPercent();
+        response.put("percent", intRequest.getSupportPercent());
+        response.put("supporters", intRequest.getSupportingUsers().stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList()));
+
+        return response;
     }
 
     private int calculateSupportPercent(InternalRequest internalRequest) {
