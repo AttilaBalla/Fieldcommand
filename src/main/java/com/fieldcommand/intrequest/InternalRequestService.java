@@ -182,8 +182,20 @@ public class InternalRequestService {
     }
 
     private int calculateSupportPercent(InternalRequest internalRequest) {
-        double numberOfSupporters = internalRequest.getSupportingUsers().size();
+
+        Set<User> supportingUsers = internalRequest.getSupportingUsers();
+
+        double numberOfSupporters = supportingUsers.size();
+
+        // we need to consider disabled users who have requests or support other requests
+
+        double disabledSupporters = supportingUsers
+                .stream()
+                .filter(user -> (user.getRole().getRoleType() == RoleType.ROLE_DISABLED))
+                .count();
+
         double totalUsers = userService.getUserCount();
-        return (int)Math.floor((numberOfSupporters / totalUsers) * 100);
+
+        return (int)Math.floor((numberOfSupporters / (totalUsers + disabledSupporters)) * 100);
     }
 }
