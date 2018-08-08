@@ -126,7 +126,7 @@ public class InternalRequest {
         this.supportPercent = supportPercent;
     }
 
-    public String getResponse() {
+    String getResponse() {
         return response;
     }
 
@@ -134,11 +134,11 @@ public class InternalRequest {
         this.response = response;
     }
 
-    public String getHandledBy() {
+    String getHandledBy() {
         return handledBy;
     }
 
-    public void setHandledBy(String handledBy) {
+    void setHandledBy(String handledBy) {
         this.handledBy = handledBy;
     }
 

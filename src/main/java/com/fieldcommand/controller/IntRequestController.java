@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
+@RequestMapping("/api")
 public class IntRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(IntRequestController.class);
@@ -32,7 +33,7 @@ public class IntRequestController {
         this.internalRequestService = internalRequestService;
     }
 
-    @PostMapping(value = "/api/user/ir/create")
+    @PostMapping(value = "/user/ir/create")
     public ResponseEntity<?> createInternalRequest(@RequestBody InternalRequest internalRequest, Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -53,12 +54,12 @@ public class IntRequestController {
         return ResponseEntity.ok(new GenericResponseJson(true));
     }
 
-    @GetMapping(value = "/api/user/ir/get")
+    @GetMapping(value = "/user/ir/get")
     public String getInternalRequests() {
         return JsonUtil.toJson(internalRequestService.findAll());
     }
 
-    @GetMapping(value = "/api/user/ir/get/{id}")
+    @GetMapping(value = "/user/ir/get/{id}")
     public String getInternalRequest(@PathVariable Long id) {
         try {
 
@@ -70,7 +71,7 @@ public class IntRequestController {
         }
     }
 
-    @PutMapping("/api/user/ir/update")
+    @PutMapping("/user/ir/update")
     public ResponseEntity<?> updateInternalRequest(@RequestBody InternalRequest update, Authentication authentication) {
 
         GenericResponseJson response = new GenericResponseJson();
@@ -88,7 +89,7 @@ public class IntRequestController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/api/user/ir/support")
+    @PostMapping("/user/ir/support")
     public ResponseEntity<?> handleSupport(@RequestBody RequestSupportJson requestSupportJson) {
 
         HashMap response;
@@ -103,7 +104,7 @@ public class IntRequestController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping(value = "/api/user/ir/delete/{id}")
+    @DeleteMapping(value = "/user/ir/delete/{id}")
     public ResponseEntity<?> deleteInternalRequest(@PathVariable Long id, Authentication authentication) {
 
         try {
@@ -116,7 +117,7 @@ public class IntRequestController {
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }
 
-    @PutMapping(value = "/api/dev/ir/updateStatus")
+    @PutMapping(value = "/user/ir/updateStatus")
     public ResponseEntity<?> updateIntRequestStatus(@RequestBody RequestStatusJson requestStatusJson, Authentication authentication) {
 
         try {
