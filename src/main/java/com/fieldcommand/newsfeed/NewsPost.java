@@ -16,6 +16,8 @@ public class NewsPost {
 
     private String title;
 
+    private String summary;
+
     @Column(length = 150000)
     private String content;
 
@@ -30,9 +32,10 @@ public class NewsPost {
 
     NewsPost() {}
 
-    public NewsPost(String title, String content, User owner, boolean visibility) {
+    public NewsPost(String title, String summary, String content, User owner, boolean visibility) {
 
         this.title = title;
+        this.summary = summary;
         this.content = content;
         this.owner = owner;
         this.visibility = visibility;
@@ -51,7 +54,7 @@ public class NewsPost {
         return title;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.title = title;
     }
 
@@ -59,11 +62,11 @@ public class NewsPost {
         return content;
     }
 
-    public void setContent(String content) {
+    void setContent(String content) {
         this.content = content;
     }
 
-    public User getOwner() {
+    User getOwner() {
         return owner;
     }
 
@@ -83,15 +86,23 @@ public class NewsPost {
         return visibility;
     }
 
-    public void setVisibility(boolean visibility) {
+    void setVisibility(boolean visibility) {
         this.visibility = visibility;
     }
 
-    public boolean isDeleted() {
+    boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

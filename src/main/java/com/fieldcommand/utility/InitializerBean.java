@@ -103,6 +103,7 @@ public class InitializerBean {
 
         newsPostRepository.save(new NewsPost(
                 "And this cool one comes from the DB",
+                "summary here. it summarizes the post. This is a sample post. Yeah. :)",
                 "with this awesome content that also comes from the DB :)",
                 ownerUser,
                 true

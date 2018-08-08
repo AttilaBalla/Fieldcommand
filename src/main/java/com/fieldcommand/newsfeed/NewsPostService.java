@@ -34,8 +34,12 @@ public class NewsPostService {
 
         User owner = userRepository.findUserById(userId);
 
-        newspostRepository.save(new NewsPost(newsPost.getTitle(), newsPost.getContent(), owner, newsPost.isVisible()));
-
+        newspostRepository.save(new NewsPost(
+                newsPost.getTitle(),
+                newsPost.getSummary(),
+                newsPost.getContent(),
+                owner,
+                newsPost.isVisible()));
     }
 
     public List<HashMap<String, Object>> findAll() {
@@ -69,6 +73,7 @@ public class NewsPostService {
         newsPostHashMap.put("date", newsPost.getTimestamp());
         newsPostHashMap.put("visible", (newsPost.isVisibility()));
         newsPostHashMap.put("content", newsPost.getContent());
+        newsPostHashMap.put("summary", newsPost.getSummary());
 
         return newsPostHashMap;
     }

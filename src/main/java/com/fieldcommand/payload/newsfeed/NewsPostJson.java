@@ -10,6 +10,9 @@ public class NewsPostJson {
     private String title;
 
     @NotBlank
+    private String summary;
+
+    @NotBlank
     private String content;
 
     private boolean visible;
@@ -44,6 +47,14 @@ public class NewsPostJson {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override
