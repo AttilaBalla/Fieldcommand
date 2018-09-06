@@ -81,7 +81,7 @@ public class User {
         userData.put("role", role.toString());
         userData.put("rolePower", role.getPower().toString());
         userData.put("projects", getProjectStringList());
-        userData.put("activated", (activationKey == null));
+        userData.put("activated", (activationKey == null || activationKey.equals("")));
 
         return userData;
     }
