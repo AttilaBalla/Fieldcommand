@@ -95,6 +95,7 @@ public class NewsPostService {
         }
 
         newsPost.setTitle(newsPostJson.getTitle());
+        newsPost.setSummary(newsPostJson.getSummary());
         newsPost.setContent(newsPostJson.getContent());
         newsPost.setVisibility(newsPostJson.isVisible());
 
