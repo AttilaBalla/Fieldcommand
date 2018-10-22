@@ -40,13 +40,17 @@ public class IntRequestController {
         Long userId = userPrincipal.getId();
 
         try {
+
             this.internalRequestService.save(internalRequest, userId);
 
         } catch (TransactionSystemException e) {
 
             if (internalRequest.getContent().equals("")) {
+
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "You should write a message"));
+
             } else {
+
                 return ResponseEntity.status(401).body(new GenericResponseJson(false, "Internal server error occurred. Please try again later."));
             }
         }
@@ -76,6 +80,7 @@ public class IntRequestController {
 
         GenericResponseJson response = new GenericResponseJson();
         try {
+
             internalRequestService.updateIntRequest(update, authentication.getName());
 
         } catch (UnauthorizedModificationException ex) {
@@ -95,7 +100,9 @@ public class IntRequestController {
         HashMap response;
 
         try {
+
             response = internalRequestService.handleSupporter(requestSupportJson);
+
         } catch (UnauthorizedModificationException ex) {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseJson(false, ex.getMessage()));
@@ -112,8 +119,10 @@ public class IntRequestController {
             internalRequestService.delete(id, authentication);
 
         } catch (UnauthorizedModificationException ex) {
+
             return ResponseEntity.status(403).body(new GenericResponseJson(false, ex.getMessage()));
         }
+
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
     }
 
@@ -121,11 +130,14 @@ public class IntRequestController {
     public ResponseEntity<?> updateIntRequestStatus(@RequestBody RequestStatusJson requestStatusJson, Authentication authentication) {
 
         try {
+
             internalRequestService.updateIntRequestStatus(requestStatusJson, authentication.getName());
+
         } catch (UnauthorizedModificationException ex) {
 
             return ResponseEntity.status(403).body(new GenericResponseJson(false, ex.getMessage()));
         }
+
         return ResponseEntity.status(200).body(new GenericResponseJson(true));
 
     }

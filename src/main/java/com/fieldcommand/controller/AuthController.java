@@ -31,10 +31,6 @@ public class AuthController {
 
     private UserRepository userRepository;
 
-    private RoleRepository roleRepository;
-
-    private PasswordEncoder passwordEncoder;
-
     private JwtTokenProvider tokenProvider;
 
     private UserService userService;
@@ -42,15 +38,11 @@ public class AuthController {
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                           UserRepository userRepository,
-                          RoleRepository roleRepository,
-                          PasswordEncoder passwordEncoder,
                           JwtTokenProvider tokenProvider,
                           UserService userService) {
 
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
         this.userService = userService;
     }
